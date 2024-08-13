@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "nz.ac.canterbury.seng303.lab2"
+    namespace = "nz.ac.canterbury.seng303.flashcardapp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "nz.ac.canterbury.seng303.lab2"
+        applicationId = "nz.ac.canterbury.seng303.flashcardapp"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
