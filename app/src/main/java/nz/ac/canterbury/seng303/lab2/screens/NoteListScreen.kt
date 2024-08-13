@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng303.lab2.screens
 
 import android.app.AlertDialog
+import android.text.Html
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.Button
@@ -84,7 +86,29 @@ fun NoteItem(navController: NavController, note: Note, noteViewModel: NoteViewMo
             ) {
                 Button(onClick = {
                     val builder = AlertDialog.Builder(context)
-                    builder.setMessage("Edit note: \"${note.title}\"?")
+                    builder.setMessage("Google this question?\n\n \"${note.title}\"?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes") { dialog, id ->
+                            Toast.makeText(context, "This hasn't been implemented yet.", Toast.LENGTH_SHORT).show()
+                            dialog.dismiss()
+                        }
+                        .setNegativeButton("Cancel") { dialog, id ->
+                            // Dismiss the dialog
+                            dialog.dismiss()
+                        }
+                    val alert = builder.create()
+                    alert.show()
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "Search",
+                        tint = Color.White
+                    )
+                }
+
+                Button(onClick = {
+                    val builder = AlertDialog.Builder(context)
+                    builder.setMessage("Edit Flash Card?\n\n \"${note.title}\"")
                         .setCancelable(false)
                         .setPositiveButton("Edit") { dialog, id ->
                             navController.navigate("EditNote/${note.id}")
@@ -108,11 +132,11 @@ fun NoteItem(navController: NavController, note: Note, noteViewModel: NoteViewMo
                 }
                 Button(onClick = {
                     val builder = AlertDialog.Builder(context)
-                    builder.setMessage("Delete note: \"${note.title}\"?")
+                    builder.setMessage("Are you sure you want to delete this flash card?\n\n \"${note.title}\"")
                         .setCancelable(false)
-                        .setPositiveButton("Delete") { dialog, id ->
+                        .setPositiveButton(Html.fromHtml("<font color='#FF0000'>Delete</font>")) { dialog, id ->
                             noteViewModel.deleteNote(note.id)
-                            Toast.makeText(context, "Note deleted.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Flash card deleted.", Toast.LENGTH_SHORT).show()
                             dialog.dismiss()
                         }
                         .setNegativeButton("Cancel") { dialog, id ->
