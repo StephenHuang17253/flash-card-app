@@ -11,8 +11,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -71,62 +74,63 @@ fun NoteItem(navController: NavController, note: Note, noteViewModel: NoteViewMo
                 text = convertTimestampToReadableTime(note.timestamp),
                 style = MaterialTheme.typography.bodyLarge
             )
-        }
+            // Display edit and delete buttons (icons)
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
 
-        // Display edit and delete buttons (icons)
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.End,
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-        ) {
-            IconButton(onClick = {
-                val builder = AlertDialog.Builder(context)
-                builder.setMessage("Edit note: \"${note.title}\"?")
-                    .setCancelable(false)
-                    .setPositiveButton("Edit") { dialog, id ->
-                        navController.navigate("EditNote/${note.id}")
-                        dialog.dismiss()
-                    }
-                    .setNegativeButton("Cancel") { dialog, id ->
-                        // Dismiss the dialog
-                        dialog.dismiss()
-                    }
-                val alert = builder.create()
-                alert.show()
+
+            ) {
+                Button(onClick = {
+                    val builder = AlertDialog.Builder(context)
+                    builder.setMessage("Edit note: \"${note.title}\"?")
+                        .setCancelable(false)
+                        .setPositiveButton("Edit") { dialog, id ->
+                            navController.navigate("EditNote/${note.id}")
+                            dialog.dismiss()
+                        }
+                        .setNegativeButton("Cancel") { dialog, id ->
+                            // Dismiss the dialog
+                            dialog.dismiss()
+                        }
+                    val alert = builder.create()
+                    alert.show()
 
 
 
-            }) {
-                Icon(
-                    imageVector = Icons.Outlined.Edit,
-                    contentDescription = "Edit",
-                    tint = Color.Blue
-                )
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.Edit,
+                        contentDescription = "Edit",
+                        tint = Color.White
+                    )
+                }
+                Button(onClick = {
+                    val builder = AlertDialog.Builder(context)
+                    builder.setMessage("Delete note: \"${note.title}\"?")
+                        .setCancelable(false)
+                        .setPositiveButton("Delete") { dialog, id ->
+                            noteViewModel.deleteNote(note.id)
+                            Toast.makeText(context, "Note deleted.", Toast.LENGTH_SHORT).show()
+                            dialog.dismiss()
+                        }
+                        .setNegativeButton("Cancel") { dialog, id ->
+                            // Dismiss the dialog
+                            dialog.dismiss()
+                        }
+                    val alert = builder.create()
+                    alert.show()
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.Delete,
+                        contentDescription = "Delete",
+                        tint = Color.White
+                    )
+                }
+
             }
-            IconButton(onClick = {
-                val builder = AlertDialog.Builder(context)
-                builder.setMessage("Delete note: \"${note.title}\"?")
-                    .setCancelable(false)
-                    .setPositiveButton("Delete") { dialog, id ->
-                        noteViewModel.deleteNote(note.id)
-                        Toast.makeText(context, "Note deleted.", Toast.LENGTH_SHORT).show()
-                        dialog.dismiss()
-                    }
-                    .setNegativeButton("Cancel") { dialog, id ->
-                        // Dismiss the dialog
-                        dialog.dismiss()
-                    }
-                val alert = builder.create()
-                alert.show()
-            }) {
-                Icon(
-                    imageVector = Icons.Outlined.Delete,
-                    contentDescription = "Delete",
-                    tint = Color.Red
-                )
-            }
+
         }
     }
 }

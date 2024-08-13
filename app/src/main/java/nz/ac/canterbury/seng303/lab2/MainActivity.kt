@@ -127,17 +127,14 @@ fun Home(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text("Welcome to my Flash Card App")
-        Button(onClick = { navController.navigate("CreateNote") }) {
-            Text("Create Note")
-        }
-        Button(onClick = { navController.navigate("NoteCard/1") }) {
-            Text("Go to Note Card")
-        }
         Button(onClick = { navController.navigate("NoteList") }) {
-            Text("Note List")
+            Text("View Flash Cards")
         }
-        Button(onClick = { navController.navigate("NoteGrid") }) {
-            Text("Note Grid")
+        Button(onClick = { navController.navigate("CreateNote") }) {
+            Text("Create Flash Card")
         }
+//        Button(onClick = { navController.navigate("NoteGrid") }) {
+//            Text("Note Grid")
+//        }
     }
 }
