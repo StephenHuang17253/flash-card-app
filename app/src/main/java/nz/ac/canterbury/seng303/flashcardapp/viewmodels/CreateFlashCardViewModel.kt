@@ -6,12 +6,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
-class CreateNoteViewModel: ViewModel() {
-    var title by mutableStateOf("")
+class CreateFlashCardViewModel: ViewModel() {
+    var question by mutableStateOf("")
         private set
 
-    fun updateTitle(newTitle: String) {
-        title = newTitle
+    fun updateQuestion(newQuestion: String) {
+        question = newQuestion
     }
 
     var answers by mutableStateOf(mutableListOf(""))

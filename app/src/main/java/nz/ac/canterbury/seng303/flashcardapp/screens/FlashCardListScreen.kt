@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -30,30 +31,30 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import nz.ac.canterbury.seng303.flashcardapp.models.Note
+import nz.ac.canterbury.seng303.flashcardapp.models.FlashCard
 import nz.ac.canterbury.seng303.flashcardapp.util.convertTimestampToReadableTime
-import nz.ac.canterbury.seng303.flashcardapp.viewmodels.NoteViewModel
+import nz.ac.canterbury.seng303.flashcardapp.viewmodels.FlashCardViewModel
 
 @Composable
-fun NoteList(navController: NavController, noteViewModel: NoteViewModel) {
-    noteViewModel.getNotes()
-    val notes: List<Note> by noteViewModel.notes.collectAsState(emptyList())
+fun FlashCardList(navController: NavController, flashCardViewModel: FlashCardViewModel) {
+    flashCardViewModel.getCards()
+    val flashCards: List<FlashCard> by flashCardViewModel.flashCards.collectAsState(emptyList())
     LazyColumn {
-        items(notes) { note ->
-            NoteItem(navController = navController, note = note, noteViewModel)
+        items(flashCards) { flashCard ->
+            FlashCardItem(navController = navController, flashCard = flashCard, flashCardViewModel)
             Divider() // Add a divider between items
         }
     }
 }
 
 @Composable
-fun NoteItem(navController: NavController, note: Note, noteViewModel: NoteViewModel) {
+fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashCardViewModel: FlashCardViewModel) {
     val context = LocalContext.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .clickable { navController.navigate("NoteCard/${note.id}") },
+            .clickable { navController.navigate("NoteCard/${flashCard.id}") },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -64,13 +65,13 @@ fun NoteItem(navController: NavController, note: Note, noteViewModel: NoteViewMo
                 .fillMaxWidth()
         ) {
             Text(
-                text = note.title,
+                text = flashCard.question,
                 style = MaterialTheme.typography.headlineSmall,
-                maxLines = 1,
+                maxLines = 3,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = convertTimestampToReadableTime(note.timestamp),
+                text = convertTimestampToReadableTime(flashCard.timestamp),
                 style = MaterialTheme.typography.bodyLarge
             )
             // Display edit and delete buttons (icons)
@@ -83,7 +84,7 @@ fun NoteItem(navController: NavController, note: Note, noteViewModel: NoteViewMo
             ) {
                 Button(onClick = {
                     val builder = AlertDialog.Builder(context)
-                    builder.setMessage("Google this question?\n\n \"${note.title}\"?")
+                    builder.setMessage("Google this question?\n\n \"${flashCard.question}\"?")
                         .setCancelable(false)
                         .setPositiveButton("Yes") { dialog, id ->
                             Toast.makeText(context, "This hasn't been implemented yet.", Toast.LENGTH_SHORT).show()
@@ -105,10 +106,10 @@ fun NoteItem(navController: NavController, note: Note, noteViewModel: NoteViewMo
 
                 Button(onClick = {
                     val builder = AlertDialog.Builder(context)
-                    builder.setMessage("Edit Flash Card?\n\n \"${note.title}\"")
+                    builder.setMessage("Edit Flash Card?\n\n \"${flashCard.question}\"")
                         .setCancelable(false)
                         .setPositiveButton("Edit") { dialog, id ->
-                            navController.navigate("EditNote/${note.id}")
+                            navController.navigate("EditNote/${flashCard.id}")
                             dialog.dismiss()
                         }
                         .setNegativeButton("Cancel") { dialog, id ->
@@ -129,10 +130,10 @@ fun NoteItem(navController: NavController, note: Note, noteViewModel: NoteViewMo
                 }
                 Button(onClick = {
                     val builder = AlertDialog.Builder(context)
-                    builder.setMessage("Are you sure you want to delete this flash card?\n\n \"${note.title}\"")
+                    builder.setMessage("Are you sure you want to delete this flash card?\n\n \"${flashCard.question}\"")
                         .setCancelable(false)
                         .setPositiveButton(Html.fromHtml("<font color='#FF0000'>Delete</font>")) { dialog, id ->
-                            noteViewModel.deleteNote(note.id)
+                            flashCardViewModel.deleteFlashCard(flashCard.id)
                             Toast.makeText(context, "Flash card deleted.", Toast.LENGTH_SHORT).show()
                             dialog.dismiss()
                         }

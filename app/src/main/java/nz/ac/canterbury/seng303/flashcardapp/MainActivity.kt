@@ -27,23 +27,22 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import nz.ac.canterbury.seng303.flashcardapp.screens.CreateNote
-import nz.ac.canterbury.seng303.flashcardapp.screens.EditNoteScreen
-import nz.ac.canterbury.seng303.flashcardapp.screens.NoteCard
-import nz.ac.canterbury.seng303.flashcardapp.screens.NoteGrid
-import nz.ac.canterbury.seng303.flashcardapp.screens.NoteList
+import nz.ac.canterbury.seng303.flashcardapp.screens.CreateFlashCard
+import nz.ac.canterbury.seng303.flashcardapp.screens.EditFlashCardScreen
+import nz.ac.canterbury.seng303.flashcardapp.screens.FlashCard
+import nz.ac.canterbury.seng303.flashcardapp.screens.FlashCardList
 import nz.ac.canterbury.seng303.flashcardapp.ui.theme.Lab2Theme
-import nz.ac.canterbury.seng303.flashcardapp.viewmodels.CreateNoteViewModel
-import nz.ac.canterbury.seng303.flashcardapp.viewmodels.NoteViewModel
+import nz.ac.canterbury.seng303.flashcardapp.viewmodels.CreateFlashCardViewModel
+import nz.ac.canterbury.seng303.flashcardapp.viewmodels.FlashCardViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel as koinViewModel
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
-    private val noteViewModel: NoteViewModel by koinViewModel()
+    private val flashCardViewModel: FlashCardViewModel by koinViewModel()
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        noteViewModel.loadDefaultNotesIfNoneExist()
+        flashCardViewModel.loadDefaultCardsIfNoneExist()
         setContent {
             Lab2Theme {
                 val navController = rememberNavController()
@@ -64,7 +63,7 @@ class MainActivity : ComponentActivity() {
                     }
                 ) {
                     Box(modifier = Modifier.padding(it)) {
-                        val createNoteViewModel: CreateNoteViewModel = viewModel()
+                        val createFlashCardViewModel: CreateFlashCardViewModel = viewModel()
                         NavHost(navController = navController, startDestination = "Home") {
                             composable("Home") {
                                 Home(navController = navController)
@@ -76,24 +75,21 @@ class MainActivity : ComponentActivity() {
                                 })
                             ) { backStackEntry ->
                                 val noteId = backStackEntry.arguments?.getString("noteId")
-                                noteId?.let { noteIdParam: String -> NoteCard(noteIdParam, noteViewModel) }
+                                noteId?.let { noteIdParam: String -> FlashCard(noteIdParam, flashCardViewModel) }
                             }
                             composable("NoteList") {
-                                NoteList(navController, noteViewModel)
+                                FlashCardList(navController, flashCardViewModel)
                             }
-                            composable("NoteGrid") {
-                                NoteGrid(navController)
-                            }
-                            composable("CreateNote") {
-                                CreateNote(
+                            composable("CreateFlashCard") {
+                                CreateFlashCard(
                                     navController = navController,
-                                    title = createNoteViewModel.title,
-                                    onTitleChange = {newTitle -> createNoteViewModel.updateTitle(newTitle)},
-                                    answers = createNoteViewModel.answers,
-                                    onAnswerChange = {index, newAnswer -> createNoteViewModel.updateAnswer(index, newAnswer)},
-                                    correctAnswerIndex = createNoteViewModel.correctAnswerIndex,
-                                    onCorrectAnswerChange = {newCorrectAnswer -> createNoteViewModel.updateCorrectAnswer(newCorrectAnswer)},
-                                    createNoteFn = {title, answers, correctAnswerIndex -> noteViewModel.createNote(title, answers, correctAnswerIndex)}
+                                    question = createFlashCardViewModel.question,
+                                    onQuestionChange = { newTitle -> createFlashCardViewModel.updateQuestion(newTitle)},
+                                    answers = createFlashCardViewModel.answers,
+                                    onAnswerChange = {index, newAnswer -> createFlashCardViewModel.updateAnswer(index, newAnswer)},
+                                    correctAnswerIndex = createFlashCardViewModel.correctAnswerIndex,
+                                    onCorrectAnswerChange = {newCorrectAnswer -> createFlashCardViewModel.updateCorrectAnswer(newCorrectAnswer)},
+                                    createFlashCardFn = { question, answers, correctAnswerIndex -> flashCardViewModel.createFlashCard(question, answers, correctAnswerIndex)}
                                     )
                             }
                             composable(
@@ -103,10 +99,10 @@ class MainActivity : ComponentActivity() {
                                 })
                             ) { backStackEntry ->
                                 val noteId = backStackEntry.arguments?.getString("noteId")
-                                noteId?.let { EditNoteScreen(
+                                noteId?.let { EditFlashCardScreen(
                                     navController = navController,
-                                    noteViewModel,
-                                    noteId = noteId.toInt(),
+                                    flashCardViewModel,
+                                    cardId = noteId.toInt(),
                                 ) }
                             }
                         }
@@ -129,7 +125,7 @@ fun Home(navController: NavController) {
         Button(onClick = { navController.navigate("NoteList") }) {
             Text("View Flash Cards")
         }
-        Button(onClick = { navController.navigate("CreateNote") }) {
+        Button(onClick = { navController.navigate("CreateFlashCard") }) {
             Text("Create Flash Card")
         }
 //        Button(onClick = { navController.navigate("NoteGrid") }) {

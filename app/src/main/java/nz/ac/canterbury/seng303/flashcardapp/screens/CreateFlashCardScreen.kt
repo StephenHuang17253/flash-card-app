@@ -22,14 +22,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 @Composable
-fun CreateNote(navController: NavController,
-               title: String,
-               onTitleChange: (String) -> Unit,
-               answers: List<String>,
-               onAnswerChange: (Int, String) -> Unit,
-               correctAnswerIndex: Int,
-               onCorrectAnswerChange: (Int) -> Unit,
-               createNoteFn: (String, List<String>, Int) -> Unit
+fun CreateFlashCard(navController: NavController,
+                    question: String,
+                    onQuestionChange: (String) -> Unit,
+                    answers: List<String>,
+                    onAnswerChange: (Int, String) -> Unit,
+                    correctAnswerIndex: Int,
+                    onCorrectAnswerChange: (Int) -> Unit,
+                    createFlashCardFn: (String, List<String>, Int) -> Unit
                ) {
     val context = LocalContext.current
     var answerFields by remember { mutableStateOf(answers.toMutableList()) }
@@ -40,8 +40,8 @@ fun CreateNote(navController: NavController,
             .padding(16.dp)
     ) {
         OutlinedTextField(
-            value = title,
-            onValueChange = {onTitleChange(it)},
+            value = question,
+            onValueChange = {onQuestionChange(it)},
             label = { Text("Question") },
             modifier = Modifier
                 .fillMaxWidth()
@@ -97,12 +97,12 @@ fun CreateNote(navController: NavController,
         // Save button
         Button(
             onClick = {
-                createNoteFn(title, answerFields, correctAnswerIndex)
+                createFlashCardFn(question, answerFields, correctAnswerIndex)
                 val builder = AlertDialog.Builder(context)
                 builder.setMessage("Created flash card!")
                     .setCancelable(false)
                     .setPositiveButton("Ok") { dialog, id -> /* Run some code on click */
-                        onTitleChange("")
+                        onQuestionChange("")
                         answerFields.forEachIndexed { index, _ ->
                             onAnswerChange(index, "")
                         }
