@@ -1,6 +1,8 @@
 package nz.ac.canterbury.seng303.flashcardapp.screens
 
 import android.app.AlertDialog
+import android.content.Intent
+import android.net.Uri
 import android.text.Html
 import android.widget.Toast
 import androidx.compose.foundation.clickable
@@ -96,7 +98,14 @@ fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashCardV
                     builder.setMessage("Google this question?\n\n \"${flashCard.question}\"?")
                         .setCancelable(false)
                         .setPositiveButton("Yes") { dialog, id ->
-                            Toast.makeText(context, "This hasn't been implemented yet.", Toast.LENGTH_SHORT).show()
+                            val encodedQuestion = Uri.encode(flashCard.question)
+                            val searchUrl = "https://www.google.com/search?q=$encodedQuestion"
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(searchUrl))
+                            try {
+                                context.startActivity(intent)
+                            } catch (e: Exception) {
+                                Toast.makeText(context, "No application to handle this action.", Toast.LENGTH_SHORT).show()
+                            }
                             dialog.dismiss()
                         }
                         .setNegativeButton("Cancel") { dialog, id ->
