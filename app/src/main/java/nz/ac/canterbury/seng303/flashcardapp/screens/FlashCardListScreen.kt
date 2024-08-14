@@ -123,22 +123,7 @@ fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashCardV
                 }
 
                 Button(onClick = {
-                    val builder = AlertDialog.Builder(context)
-                    builder.setMessage("Edit Flash Card?\n\n \"${flashCard.question}\"")
-                        .setCancelable(false)
-                        .setPositiveButton("Edit") { dialog, id ->
                             navController.navigate("EditFlashCard/${flashCard.id}")
-                            dialog.dismiss()
-                        }
-                        .setNegativeButton("Cancel") { dialog, id ->
-                            // Dismiss the dialog
-                            dialog.dismiss()
-                        }
-                    val alert = builder.create()
-                    alert.show()
-
-
-
                 }) {
                     Icon(
                         imageVector = Icons.Filled.Edit,
@@ -148,7 +133,7 @@ fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashCardV
                 }
                 Button(onClick = {
                     val builder = AlertDialog.Builder(context)
-                    builder.setMessage("Are you sure you want to delete this flash card?\n\n \"${flashCard.question}\"")
+                    builder.setMessage("Are you sure you want to delete this flash card?")
                         .setCancelable(false)
                         .setPositiveButton(Html.fromHtml("<font color='#FF0000'>Delete</font>")) { dialog, id ->
                             flashCardViewModel.deleteFlashCard(flashCard.id)

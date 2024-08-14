@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -52,9 +53,12 @@ fun CreateFlashCard(navController: NavController,
 
         // Answer inputs
         answerFields.forEachIndexed { index, answer ->
-            Row(modifier = Modifier
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 8.dp)
+
             ) {
                 OutlinedTextField(
                     value = answer,
@@ -119,7 +123,7 @@ fun CreateFlashCard(navController: NavController,
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            Text(text = "Save")
+            Text(text = "Save and return")
         }
     }
 }
