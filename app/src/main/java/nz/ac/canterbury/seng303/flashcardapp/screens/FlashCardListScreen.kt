@@ -39,6 +39,15 @@ import nz.ac.canterbury.seng303.flashcardapp.viewmodels.FlashCardViewModel
 fun FlashCardList(navController: NavController, flashCardViewModel: FlashCardViewModel) {
     flashCardViewModel.getCards()
     val flashCards: List<FlashCard> by flashCardViewModel.flashCards.collectAsState(emptyList())
+
+    if (flashCards.isEmpty()) {
+        Text(
+            text = "There are no cards created.",
+            style = MaterialTheme.typography.headlineMedium,
+            modifier = Modifier.padding(16.dp)
+        )
+    }
+
     LazyColumn {
         items(flashCards) { flashCard ->
             FlashCardItem(navController = navController, flashCard = flashCard, flashCardViewModel)
