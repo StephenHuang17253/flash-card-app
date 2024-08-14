@@ -106,7 +106,7 @@ fun CreateFlashCard(navController: NavController,
                         answerFields.forEachIndexed { index, _ ->
                             onAnswerChange(index, "")
                         }
-                        navController.navigate("noteList")
+                        navController.navigate("FlashCardList")
                     }
                     .setNegativeButton("Cancel") { dialog, id ->
                         // Dismiss the dialog

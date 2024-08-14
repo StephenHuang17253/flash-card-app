@@ -115,11 +115,11 @@ fun EditFlashCardScreen(navController: NavController,
                         correctAnswerIndex
                     )
                 }
-                navController.navigate("NoteList")
+                navController.navigate("FlashCardList")
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Update Note")
+            Text(text = "Update Card")
         }
     }
 }

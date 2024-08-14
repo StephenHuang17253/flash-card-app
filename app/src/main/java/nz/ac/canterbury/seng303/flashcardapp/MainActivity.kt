@@ -31,6 +31,7 @@ import nz.ac.canterbury.seng303.flashcardapp.screens.CreateFlashCard
 import nz.ac.canterbury.seng303.flashcardapp.screens.EditFlashCardScreen
 import nz.ac.canterbury.seng303.flashcardapp.screens.FlashCard
 import nz.ac.canterbury.seng303.flashcardapp.screens.FlashCardList
+import nz.ac.canterbury.seng303.flashcardapp.screens.PlayFlashCards
 import nz.ac.canterbury.seng303.flashcardapp.ui.theme.Lab2Theme
 import nz.ac.canterbury.seng303.flashcardapp.viewmodels.CreateFlashCardViewModel
 import nz.ac.canterbury.seng303.flashcardapp.viewmodels.FlashCardViewModel
@@ -69,15 +70,15 @@ class MainActivity : ComponentActivity() {
                                 Home(navController = navController)
                             }
                             composable(
-                                "NoteCard/{noteId}",
-                                arguments = listOf(navArgument("noteId") {
+                                "FlashCard/{cardId}",
+                                arguments = listOf(navArgument("cardId") {
                                     type = NavType.StringType
                                 })
                             ) { backStackEntry ->
-                                val noteId = backStackEntry.arguments?.getString("noteId")
-                                noteId?.let { noteIdParam: String -> FlashCard(noteIdParam, flashCardViewModel) }
+                                val cardId = backStackEntry.arguments?.getString("cardId")
+                                cardId?.let { cardIdParam: String -> FlashCard(cardIdParam, flashCardViewModel) }
                             }
-                            composable("NoteList") {
+                            composable("FlashCardList") {
                                 FlashCardList(navController, flashCardViewModel)
                             }
                             composable("CreateFlashCard") {
@@ -93,17 +94,20 @@ class MainActivity : ComponentActivity() {
                                     )
                             }
                             composable(
-                                "EditNote/{noteId}",
-                                arguments = listOf(navArgument("noteId") {
+                                "EditFlashCard/{cardId}",
+                                arguments = listOf(navArgument("cardId") {
                                     type = NavType.StringType
                                 })
                             ) { backStackEntry ->
-                                val noteId = backStackEntry.arguments?.getString("noteId")
-                                noteId?.let { EditFlashCardScreen(
+                                val cardId = backStackEntry.arguments?.getString("cardId")
+                                cardId?.let { EditFlashCardScreen(
                                     navController = navController,
                                     flashCardViewModel,
-                                    cardId = noteId.toInt(),
+                                    cardId = cardId.toInt(),
                                 ) }
+                            }
+                            composable("PlayFlashCard") {
+                                PlayFlashCards(flashCardViewModel = flashCardViewModel)
                             }
                         }
                     }
@@ -122,14 +126,14 @@ fun Home(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text("Welcome to my Flash Card App")
-        Button(onClick = { navController.navigate("NoteList") }) {
+        Button(onClick = { navController.navigate("FlashCardList") }) {
             Text("View Flash Cards")
         }
         Button(onClick = { navController.navigate("CreateFlashCard") }) {
             Text("Create Flash Card")
         }
-//        Button(onClick = { navController.navigate("NoteGrid") }) {
-//            Text("Note Grid")
-//        }
+        Button(onClick = { navController.navigate("PlayFlashCard") }) {
+            Text("Play Flash Cards")
+        }
     }
 }

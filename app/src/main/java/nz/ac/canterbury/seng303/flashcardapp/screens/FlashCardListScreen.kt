@@ -54,7 +54,7 @@ fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashCardV
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .clickable { navController.navigate("NoteCard/${flashCard.id}") },
+            .clickable { navController.navigate("FlashCard/${flashCard.id}") },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -109,7 +109,7 @@ fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashCardV
                     builder.setMessage("Edit Flash Card?\n\n \"${flashCard.question}\"")
                         .setCancelable(false)
                         .setPositiveButton("Edit") { dialog, id ->
-                            navController.navigate("EditNote/${flashCard.id}")
+                            navController.navigate("EditFlashCard/${flashCard.id}")
                             dialog.dismiss()
                         }
                         .setNegativeButton("Cancel") { dialog, id ->

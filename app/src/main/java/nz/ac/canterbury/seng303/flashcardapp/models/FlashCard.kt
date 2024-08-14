@@ -9,7 +9,7 @@ data class FlashCard(
 ): Identifiable {
 
     companion object {
-        fun getNotes(): List<FlashCard> {
+        fun getCards(): List<FlashCard> {
             return listOf(
                 FlashCard(
                     1,

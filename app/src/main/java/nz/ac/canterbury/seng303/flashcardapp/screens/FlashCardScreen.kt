@@ -21,8 +21,8 @@ import nz.ac.canterbury.seng303.flashcardapp.viewmodels.FlashCardViewModel
 @Composable
 fun FlashCard(cardId: String, flashCardViewModel: FlashCardViewModel) {
     flashCardViewModel.getCardById(cardId = cardId.toIntOrNull())
-    val selectedNoteState by flashCardViewModel.selectedFlashCard.collectAsState(null)
-    val flashCard: FlashCard? = selectedNoteState
+    val selectedCardState by flashCardViewModel.selectedFlashCard.collectAsState(null)
+    val flashCard: FlashCard? = selectedCardState
 
     Column(
         modifier = Modifier
@@ -57,7 +57,7 @@ fun FlashCard(cardId: String, flashCardViewModel: FlashCardViewModel) {
                 }
             }
             Text(
-                text = "\nCorrect Answer: ${flashCard.answers.get(flashCard.correctAnswer)}" ,
+                text = "\nCorrect Answer: ${flashCard.answers.get(flashCard.correctAnswer)}",
                 style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
             )
             Row {
@@ -76,7 +76,10 @@ fun FlashCard(cardId: String, flashCardViewModel: FlashCardViewModel) {
 
             }
         } else {
-            Text(text = "Could not find note: $cardId", style = MaterialTheme.typography.headlineMedium)
+            Text(
+                text = "Could not find card: $cardId",
+                style = MaterialTheme.typography.headlineMedium
+            )
         }
     }
 }
