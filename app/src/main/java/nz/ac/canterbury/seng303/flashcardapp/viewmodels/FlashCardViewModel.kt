@@ -54,8 +54,7 @@ class FlashCardViewModel(private val flashCardStorage: Storage<FlashCard>): View
         flashCardStorage.getAll().catch { Log.e("FLASH_CARD_VIEW_MODEL", it.toString()) }.collect{_flashCards.emit(it)}
     }
 
-    fun editFlashCard(cardId: Int, question: String, answers: List<String>, correctAnswerIndex: Int) = viewModelScope.launch {
-        val updatedFlashCard = FlashCard(cardId, question, answers, correctAnswerIndex, System.currentTimeMillis())
+    fun editFlashCard(cardId: Int, updatedFlashCard: FlashCard) = viewModelScope.launch {
         flashCardStorage.edit(cardId, updatedFlashCard).catch { Log.e("FLASH_CARD_VIEW_MODEL", "Could not edit flash card") }.collect()
         flashCardStorage.getAll().catch { Log.e("FLASH_CARD_VIEW_MODEL", it.toString()) }.collect{_flashCards.emit(it)}
     }

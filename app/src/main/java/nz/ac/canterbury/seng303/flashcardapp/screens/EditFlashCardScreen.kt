@@ -1,53 +1,40 @@
 package nz.ac.canterbury.seng303.flashcardapp.screens
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import android.app.AlertDialog
+import android.widget.Toast
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import nz.ac.canterbury.seng303.flashcardapp.models.FlashCard
+import nz.ac.canterbury.seng303.flashcardapp.viewmodels.EditFlashCardViewModel
 import nz.ac.canterbury.seng303.flashcardapp.viewmodels.FlashCardViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditFlashCardScreen(navController: NavController,
                         flashCardViewModel: FlashCardViewModel = viewModel(),
-                        cardId: Int
-                    ) {
-    val card by flashCardViewModel.selectedFlashCard.collectAsState()
-    val (question, setQuestion) = rememberSaveable { mutableStateOf("") }
-    val (answers, setAnswers) = rememberSaveable {  mutableStateOf(mutableListOf("")) }
-    val (correctAnswerIndex, setCorrectAnswerIndex) = rememberSaveable { mutableIntStateOf(-1) }
+                        cardId: Int,
+                        editFlashCardViewModel: EditFlashCardViewModel = viewModel()
+    ) {
+    val context = LocalContext.current
+    val selectedCardState by flashCardViewModel.selectedFlashCard.collectAsState(null)
+    val card: FlashCard? = selectedCardState
 
-    // Load card details if card is not already loaded
-    LaunchedEffect(cardId) {
-        flashCardViewModel.getCardById(cardId)
-    }
-
-    // Update question and answers when the card changes
+    // Get the default values for the flash card properties
     LaunchedEffect(card) {
-        card?.let {
-            setQuestion(it.question)
-            setAnswers(it.answers.toMutableList())
-            setCorrectAnswerIndex(it.correctAnswer)
+        if (card == null) {
+            flashCardViewModel.getCardById(cardId)
+        } else {
+            editFlashCardViewModel.setDefaultValues(card)
         }
     }
+
 
     Column(
         modifier = Modifier
@@ -55,8 +42,8 @@ fun EditFlashCardScreen(navController: NavController,
             .padding(16.dp)
     ) {
         OutlinedTextField(
-            value = question,
-            onValueChange = { setQuestion(it) },
+            value = editFlashCardViewModel.question,
+            onValueChange = { editFlashCardViewModel.updateQuestion(it) },
             label = { Text("Title") },
             modifier = Modifier
                 .fillMaxWidth()
@@ -64,7 +51,7 @@ fun EditFlashCardScreen(navController: NavController,
         )
 
         // Answer inputs
-        answers.forEachIndexed { index, answer ->
+        editFlashCardViewModel.answers.forEachIndexed { index, answer ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -74,7 +61,7 @@ fun EditFlashCardScreen(navController: NavController,
                 OutlinedTextField(
                     value = answer,
                     onValueChange = { newAnswer ->
-                        setAnswers(answers.toMutableList().apply { this[index] = newAnswer })
+                        editFlashCardViewModel.updateAnswer(index, newAnswer)
                     },
                     label = { Text("Answer ${index + 1}") },
                     modifier = Modifier
@@ -83,9 +70,9 @@ fun EditFlashCardScreen(navController: NavController,
                 )
 
                 Checkbox(
-                    checked = correctAnswerIndex == index,
+                    checked = editFlashCardViewModel.correctAnswerIndex == index,
                     onCheckedChange = { isChecked ->
-                        if (isChecked) setCorrectAnswerIndex(index)
+                        if (isChecked) editFlashCardViewModel.updateCorrectAnswerIndex(index)
                     }
                 )
                 Text(text = "Correct")
@@ -95,9 +82,7 @@ fun EditFlashCardScreen(navController: NavController,
         // Button to add more answer fields
         Button(
             onClick = {
-                if (answers.size < 5) {
-                    setAnswers(answers.toMutableList().apply { add("") })
-                }
+                editFlashCardViewModel.addAnswer()
             },
             modifier = Modifier
                 .padding(vertical = 8.dp)
@@ -107,21 +92,24 @@ fun EditFlashCardScreen(navController: NavController,
 
         Button(
             onClick = {
-                card?.let {
-                    flashCardViewModel.editFlashCard(
-                        it.id,
-                        question,
-                        answers,
-                        correctAnswerIndex
-                    )
-                }
+                flashCardViewModel.editFlashCard(
+                    cardId = cardId,
+                    FlashCard(id = cardId,
+                        question = editFlashCardViewModel.question,
+                        answers = editFlashCardViewModel.answers,
+                        correctAnswer = editFlashCardViewModel.correctAnswerIndex,
+                        timestamp = System.currentTimeMillis()))
+
+                Toast.makeText(context, "Flash card edited.", Toast.LENGTH_SHORT).show()
                 navController.navigate("FlashCardList")
+
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
         ) {
             Text(text = "Update Card")
         }
+
+
     }
 }
-
-
