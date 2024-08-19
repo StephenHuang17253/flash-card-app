@@ -18,6 +18,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -99,14 +100,12 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 // Checkbox for each answer
-                                Checkbox(
-                                    checked = (answer == selectedAnswer),
-                                    onCheckedChange = {
-                                        setSelectedAnswer(if (it) answer else null)
-                                    }
+                                RadioButton(
+                                    selected = (answer == selectedAnswer),
+                                    onClick = { setSelectedAnswer(answer) }
                                 )
                                 Text(
-                                    text = "${index + 1}. $answer",
+                                    text = "$answer",
                                     style = MaterialTheme.typography.bodyLarge,
                                     modifier = Modifier.padding(start = 8.dp)
                                 )
@@ -188,7 +187,7 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = "Q${index + 1}: $question",
+                                    text = "Q${index + 1}. $question",
                                     style = MaterialTheme.typography.bodyLarge,
                                     modifier = Modifier.weight(1f)
                                 )
