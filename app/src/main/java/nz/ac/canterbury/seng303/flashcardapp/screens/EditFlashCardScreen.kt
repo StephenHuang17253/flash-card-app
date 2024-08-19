@@ -41,13 +41,28 @@ fun EditFlashCardScreen(navController: NavController,
             .fillMaxSize()
             .padding(16.dp)
     ) {
+
+        Row(
+            modifier = Modifier.padding(bottom = 16.dp),
+            horizontalArrangement = Arrangement.Center
+        )
+        {
+            Text(
+                text = "Edit Flash Card",
+                style = MaterialTheme.typography.headlineLarge
+            )
+        }
+
+
         OutlinedTextField(
             value = editFlashCardViewModel.question,
             onValueChange = { editFlashCardViewModel.updateQuestion(it) },
-            label = { Text("Title") },
+            label = { Text("Question") },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 8.dp)
+                .heightIn(min = 100.dp)
+                .padding(bottom = 8.dp),
+            maxLines = 4
         )
 
         // Answer inputs

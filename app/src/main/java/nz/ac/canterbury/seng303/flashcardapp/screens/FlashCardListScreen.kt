@@ -6,10 +6,12 @@ import android.net.Uri
 import android.text.Html
 import android.widget.Toast
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,6 +22,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -30,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -42,20 +46,41 @@ fun FlashCardList(navController: NavController, flashCardViewModel: FlashCardVie
     flashCardViewModel.getCards()
     val flashCards: List<FlashCard> by flashCardViewModel.flashCards.collectAsState(emptyList())
 
-    if (flashCards.isEmpty()) {
-        Text(
-            text = "There are no cards created.",
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(16.dp)
-        )
-    }
-
-    LazyColumn {
-        items(flashCards) { flashCard ->
-            FlashCardItem(navController = navController, flashCard = flashCard, flashCardViewModel)
-            Divider() // Add a divider between items
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        if (flashCards.isEmpty()) {
+            Text(
+                text = "There are no cards created.",
+                style = MaterialTheme.typography.headlineMedium
+            )
         }
     }
+
+    Column {
+        Row(
+            modifier = Modifier
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.Center
+        )
+        {
+            Text(
+                text = "Your Flash Cards",
+                style = MaterialTheme.typography.headlineLarge
+            )
+        }
+        HorizontalDivider()
+        LazyColumn {
+            items(flashCards) { flashCard ->
+                FlashCardItem(navController = navController, flashCard = flashCard, flashCardViewModel)
+                HorizontalDivider() // Add a divider between items
+            }
+        }
+    }
+
 }
 
 @Composable

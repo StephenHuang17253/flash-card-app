@@ -14,6 +14,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -21,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavType
@@ -128,13 +130,20 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Home(navController: NavController) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Welcome to my Flash Card App")
+    Text(
+        text = "My Flash Card App",
+        style = MaterialTheme.typography.headlineLarge,
+        modifier = Modifier
+            .padding(16.dp)
+        )
         Button(onClick = { navController.navigate("FlashCardList") }) {
-            Text("View Flash Cards")
+            Text(
+                text = "View Flash Cards")
         }
         Button(onClick = { navController.navigate("CreateFlashCard") }) {
             Text("Create Flash Card")

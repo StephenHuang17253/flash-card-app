@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng303.flashcardapp.screens
 
 import android.app.AlertDialog
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +10,8 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,15 +43,31 @@ fun CreateFlashCard(navController: NavController,
             .fillMaxSize()
             .padding(16.dp)
     ) {
+
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(bottom = 16.dp),
+        )
+        {
+            Text(
+                text = "Add Flash Card",
+                style = MaterialTheme.typography.headlineLarge,
+
+            )
+
+        }
+        HorizontalDivider()
+
+
         OutlinedTextField(
             value = question,
-            onValueChange = {onQuestionChange(it)},
+            onValueChange = { onQuestionChange(it) },
             label = { Text("Question") },
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(min = 100.dp)
                 .padding(bottom = 8.dp),
-            maxLines = 5
+            maxLines = 4
         )
 
         // Answer inputs
@@ -56,15 +75,16 @@ fun CreateFlashCard(navController: NavController,
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 8.dp)
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
 
             ) {
                 OutlinedTextField(
                     value = answer,
                     onValueChange = { newAnswer ->
                         onAnswerChange(index, newAnswer)
-                        answerFields = answerFields.toMutableList().apply { this[index] = newAnswer }
+                        answerFields =
+                            answerFields.toMutableList().apply { this[index] = newAnswer }
                     },
                     label = { Text("Answer ${index + 1}") },
                     modifier = Modifier
