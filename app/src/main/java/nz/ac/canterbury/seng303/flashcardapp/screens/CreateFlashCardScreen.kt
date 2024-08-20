@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,8 +39,8 @@ fun CreateFlashCard(navController: NavController,
                     createFlashCardFn: (String, List<FlashCardAnswer>, Int) -> Unit
                ) {
     val context = LocalContext.current
-    var answerFields by remember { mutableStateOf(answers.toMutableList()) }
-    var nextId by remember { mutableStateOf(answerFields.size) }
+    var answerFields by rememberSaveable { mutableStateOf(answers.toMutableList()) }
+    var nextId by rememberSaveable { mutableStateOf(answerFields.size) }
 
     Column(
         modifier = Modifier

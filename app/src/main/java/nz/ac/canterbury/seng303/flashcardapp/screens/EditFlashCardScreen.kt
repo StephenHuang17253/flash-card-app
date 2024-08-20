@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -26,12 +27,15 @@ fun EditFlashCardScreen(navController: NavController,
     val selectedCardState by flashCardViewModel.selectedFlashCard.collectAsState(null)
     val card: FlashCard? = selectedCardState
 
-    // Get the default values for the flash card properties
-    LaunchedEffect(card) {
-        if (card == null) {
-            flashCardViewModel.getCardById(cardId)
-        } else {
-            editFlashCardViewModel.setDefaultValues(card)
+    LaunchedEffect(cardId) {
+        flashCardViewModel.getCardById(cardId)
+    }
+
+    LaunchedEffect(selectedCardState) {
+        selectedCardState?.let { card ->
+            if (editFlashCardViewModel.question.isEmpty()) {
+                editFlashCardViewModel.setDefaultValues(card)
+            }
         }
     }
 
@@ -56,7 +60,9 @@ fun EditFlashCardScreen(navController: NavController,
 
         OutlinedTextField(
             value = editFlashCardViewModel.question,
-            onValueChange = { editFlashCardViewModel.updateQuestion(it) },
+            onValueChange = {
+                editFlashCardViewModel.updateQuestion(it)
+                            },
             label = { Text("Question") },
             modifier = Modifier
                 .fillMaxWidth()
