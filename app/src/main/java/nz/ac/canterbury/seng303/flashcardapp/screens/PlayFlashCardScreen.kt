@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import nz.ac.canterbury.seng303.flashcardapp.models.FlashCardAnswer
 import nz.ac.canterbury.seng303.flashcardapp.viewmodels.FlashCardViewModel
 
 @Composable
@@ -39,9 +40,9 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
     val flashCards by flashCardViewModel.flashCards.collectAsState(emptyList())
 
     val (currentIndex, setCurrentIndex) = remember { mutableStateOf(0) }
-    val (selectedAnswer, setSelectedAnswer) = remember { mutableStateOf<String?>(null) }
+    val (selectedAnswer, setSelectedAnswer) = remember { mutableStateOf<FlashCardAnswer?>(null) }
     val (answerSubmitted, setAnswerSubmitted) = remember { mutableStateOf(false) }
-    val (answersHistory, setAnswersHistory) = remember { mutableStateOf(emptyList<Pair<String?, Boolean>>()) }
+    val (answersHistory, setAnswersHistory) = remember { mutableStateOf(emptyList<Pair<FlashCardAnswer?, Boolean>>()) }
     val context = LocalContext.current
 
     val isSummaryVisible = flashCards.isNotEmpty() && answersHistory.size == flashCards.size
@@ -117,7 +118,7 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
                     LaunchedEffect(selectedAnswer, answerSubmitted) {
                         if (answerSubmitted) {
                             selectedAnswer?.let {
-                                if (it == flashCard.answers[flashCard.correctAnswer]) {
+                                if (it.id == flashCard.correctAnswer) {
                                     Toast.makeText(context, "Correct answer!", Toast.LENGTH_SHORT).show()
                                     setAnswersHistory(answersHistory + (selectedAnswer to true))
                                 } else {

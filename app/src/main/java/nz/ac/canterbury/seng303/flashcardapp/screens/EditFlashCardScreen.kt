@@ -74,9 +74,9 @@ fun EditFlashCardScreen(navController: NavController,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 OutlinedTextField(
-                    value = answer,
+                    value = answer.text,
                     onValueChange = { newAnswer ->
-                        editFlashCardViewModel.updateAnswer(index, newAnswer)
+                        editFlashCardViewModel.updateAnswer(answer.id, newAnswer)
                     },
                     label = { Text("Answer ${index + 1}") },
                     modifier = Modifier

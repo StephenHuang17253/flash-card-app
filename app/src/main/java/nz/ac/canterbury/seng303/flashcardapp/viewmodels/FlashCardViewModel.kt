@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import nz.ac.canterbury.seng303.flashcardapp.datastore.Storage
 import nz.ac.canterbury.seng303.flashcardapp.models.FlashCard
+import nz.ac.canterbury.seng303.flashcardapp.models.FlashCardAnswer
 import kotlin.random.Random
 
 class FlashCardViewModel(private val flashCardStorage: Storage<FlashCard>): ViewModel() {
@@ -43,12 +44,12 @@ class FlashCardViewModel(private val flashCardStorage: Storage<FlashCard>): View
         }
     }
 
-    fun createFlashCard(question: String, answers: List<String>, correctAnswerIndex: Int) = viewModelScope.launch {
+    fun createFlashCard(question: String, answers: List<FlashCardAnswer>, correctAnswerId: Int) = viewModelScope.launch {
         val flashCard = FlashCard(
             id = Random.nextInt(0, Int.MAX_VALUE),
             question = question,
             answers = answers,
-            correctAnswer = correctAnswerIndex,
+            correctAnswer = correctAnswerId,
             timestamp = System.currentTimeMillis())
         flashCardStorage.insert(flashCard).catch { Log.e("FLASH_CARD_VIEW_MODEL", "Could not insert flash card") }.collect()
         flashCardStorage.getAll().catch { Log.e("FLASH_CARD_VIEW_MODEL", it.toString()) }.collect{_flashCards.emit(it)}

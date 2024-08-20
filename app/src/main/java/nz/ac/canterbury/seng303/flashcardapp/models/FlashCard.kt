@@ -3,7 +3,7 @@ package nz.ac.canterbury.seng303.flashcardapp.models
 data class FlashCard(
     val id: Int,
     val question: String,
-    val answers: List<String>,
+    val answers: List<FlashCardAnswer>,
     val correctAnswer: Int,
     val timestamp: Long,
 ): Identifiable {
@@ -14,21 +14,34 @@ data class FlashCard(
                 FlashCard(
                     1,
                     "Which planet is known as the Red Planet?",
-                    listOf("Mars", "Venus", "Jupiter"),
+                    answers = listOf(
+                        FlashCardAnswer(0, "Mars"),
+                        FlashCardAnswer(1, "Venus"),
+                        FlashCardAnswer(2, "Jupiter")
+                    ),
                     0,
                     System.currentTimeMillis()
                 ),
                 FlashCard(
                     2,
                     "Who wrote 'A Game of Thrones'?",
-                    listOf("J.R.R Tolkien", "George R.R. Martin", "J.K. Rowling"),
+                    answers = listOf(
+                        FlashCardAnswer(0, "J.R.R Tolkien"),
+                        FlashCardAnswer(1, "George R.R. Martin"),
+                        FlashCardAnswer(2, "J.K. Rowling")
+                    ),
                     1,
                     System.currentTimeMillis()
                 ),
                 FlashCard(
                     3,
                     "Which of these is the first book in the 'Stormlight Archive' series?",
-                    listOf("Oathbringer", "The Way of Kings", "Words of Radiance", "Rhythm of War"),
+                    answers = listOf(
+                        FlashCardAnswer(0, "Oathbringer"),
+                        FlashCardAnswer(1, "The Way of Kings"),
+                        FlashCardAnswer(2, "Words of Radiance"),
+                        FlashCardAnswer(3, "Rhythm of War")
+                    ),
                     1,
                     System.currentTimeMillis()
                 )

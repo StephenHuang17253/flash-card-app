@@ -97,7 +97,7 @@ class MainActivity : ComponentActivity() {
                                     onQuestionChange = { newTitle -> createFlashCardViewModel.updateQuestion(newTitle)},
                                     answers = createFlashCardViewModel.answers,
                                     onAnswerChange = {index, newAnswer -> createFlashCardViewModel.updateAnswer(index, newAnswer)},
-                                    correctAnswerIndex = createFlashCardViewModel.correctAnswerIndex,
+                                    correctAnswerId = createFlashCardViewModel.correctAnswerId,
                                     onCorrectAnswerChange = {newCorrectAnswer -> createFlashCardViewModel.updateCorrectAnswer(newCorrectAnswer)},
                                     createFlashCardFn = { question, answers, correctAnswerIndex -> flashCardViewModel.createFlashCard(question, answers, correctAnswerIndex)}
                                     )
