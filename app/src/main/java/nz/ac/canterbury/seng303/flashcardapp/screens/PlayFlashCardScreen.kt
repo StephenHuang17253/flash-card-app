@@ -106,7 +106,7 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
                                     onClick = { setSelectedAnswer(answer) }
                                 )
                                 Text(
-                                    text = "$answer",
+                                    text = answer.text,
                                     style = MaterialTheme.typography.bodyLarge,
                                     modifier = Modifier.padding(start = 8.dp)
                                 )
@@ -122,7 +122,8 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
                                     Toast.makeText(context, "Correct answer!", Toast.LENGTH_SHORT).show()
                                     setAnswersHistory(answersHistory + (selectedAnswer to true))
                                 } else {
-                                    Toast.makeText(context, "Incorrect. The correct answer is: ${flashCard.answers[flashCard.correctAnswer]}", Toast.LENGTH_SHORT).show()
+                                    val correctAnswer = flashCard.answers.find { it.id == flashCard.correctAnswer }
+                                    Toast.makeText(context, "Incorrect. The correct answer is: ${correctAnswer?.text}", Toast.LENGTH_SHORT).show()
                                     setAnswersHistory(answersHistory + (selectedAnswer to false))
                                 }
                             }

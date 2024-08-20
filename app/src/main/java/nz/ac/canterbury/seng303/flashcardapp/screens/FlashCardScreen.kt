@@ -50,16 +50,19 @@ fun FlashCard(cardId: String, flashCardViewModel: FlashCardViewModel) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "${index + 1}. $answer",
+                            text = "• ${answer.text}",
                             style = MaterialTheme.typography.bodyLarge
                         )
                     }
                 }
             }
-            Text(
-                text = "\nCorrect Answer: ${flashCard.answers.get(flashCard.correctAnswer)}",
-                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
-            )
+            val correctAnswer = flashCard.answers.find { it.id == flashCard.correctAnswer }
+            if (correctAnswer != null) {
+                Text(
+                    text = "\nCorrect Answer: ${correctAnswer.text}",
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
+                )
+            }
             Row {
                 Text(
                     text = "\nLast modified on " + convertTimestampToReadableTime(flashCard.timestamp),
