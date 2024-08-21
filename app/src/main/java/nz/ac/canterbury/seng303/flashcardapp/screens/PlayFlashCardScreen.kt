@@ -15,9 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
@@ -29,17 +27,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import nz.ac.canterbury.seng303.flashcardapp.models.FlashCardAnswer
 import nz.ac.canterbury.seng303.flashcardapp.viewmodels.FlashCardViewModel
 import nz.ac.canterbury.seng303.flashcardapp.viewmodels.PlayFlashCardViewModel
 
@@ -132,7 +125,7 @@ fun PlayFlashCards(
 
                         LaunchedEffect(selectedAnswer, answerSubmitted) {
                             if (answerSubmitted) {
-                                playFlashCardViewModel.submitAnswer()
+                                playFlashCardViewModel.submitAnswer(context)
                             }
                         }
 

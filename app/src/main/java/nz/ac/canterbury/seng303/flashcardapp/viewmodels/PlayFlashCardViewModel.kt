@@ -1,5 +1,7 @@
 package nz.ac.canterbury.seng303.flashcardapp.viewmodels
 
+import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,11 +46,19 @@ class PlayFlashCardViewModel : ViewModel() {
         }
     }
 
-    fun submitAnswer() {
+    fun submitAnswer(context: Context) {
         viewModelScope.launch {
             val flashCard = _flashCards.value[_currentIndex.value]
             val isCorrect = _selectedAnswer.value == flashCard.correctAnswer
             _answersHistory.emit(_answersHistory.value + (_selectedAnswer.value to isCorrect))
+            val correctAnswerText = flashCard.answers.find { it.id == flashCard.correctAnswer }?.text ?: "Unknown"
+
+            val message = if (isCorrect) {
+                "Correct answer!"
+            } else {
+                "Wrong answer!\nCorrect Answer was:\n $correctAnswerText"
+            }
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 
             if (_currentIndex.value < _flashCards.value.size - 1) {
                 _currentIndex.emit(_currentIndex.value + 1)
