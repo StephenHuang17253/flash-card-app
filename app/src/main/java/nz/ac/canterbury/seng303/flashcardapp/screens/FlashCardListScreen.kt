@@ -147,7 +147,10 @@ fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashCardV
                             }
                         val alert = builder.create()
                         alert.show()
-                    }) {
+                    },
+                    modifier = Modifier
+                        .padding(4.dp)
+                    ) {
                         Icon(
                             imageVector = Icons.Filled.Search,
                             contentDescription = "Search",
@@ -157,7 +160,10 @@ fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashCardV
 
                     Button(onClick = {
                         navController.navigate("EditFlashCard/${flashCard.id}")
-                    }) {
+                    },
+                    modifier = Modifier
+                        .padding(4.dp)
+                    ) {
                         Icon(
                             imageVector = Icons.Filled.Edit,
                             contentDescription = "Edit",
@@ -179,7 +185,10 @@ fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashCardV
                             }
                         val alert = builder.create()
                         alert.show()
-                    }) {
+                    },
+                        modifier = Modifier
+                            .padding(4.dp)
+                    ) {
                         Icon(
                             imageVector = Icons.Filled.Delete,
                             contentDescription = "Delete",

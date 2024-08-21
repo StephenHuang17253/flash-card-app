@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng303.flashcardapp.screens
 
 import android.app.AlertDialog
+import android.text.Html
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -166,7 +167,20 @@ fun EditFlashCardScreen(navController: NavController,
                             timestamp = System.currentTimeMillis()))
 
                     Toast.makeText(context, "Flash card edited.", Toast.LENGTH_SHORT).show()
-                    navController.navigate("FlashCardList")
+
+                    val builder = AlertDialog.Builder(context)
+                    builder.setMessage("Where do you want to go")
+                        .setCancelable(false)
+                        .setPositiveButton("Home") { dialog, id ->
+                            navController.navigate("Home")
+                            dialog.dismiss()
+                        }
+                        .setNegativeButton("View Flash Cards") { dialog, id ->
+                            navController.navigate("FlashCardList")
+                            dialog.dismiss()
+                        }
+                    val alert = builder.create()
+                    alert.show()
 
                 },
                 modifier = Modifier
