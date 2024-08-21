@@ -4,6 +4,8 @@ import android.app.AlertDialog
 import android.text.Html
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -40,6 +42,8 @@ fun EditFlashCardScreen(navController: NavController,
         }
     }
 
+    val scrollState = rememberScrollState()
+
     ElevatedCard(
         modifier = Modifier
             .padding(16.dp)
@@ -47,6 +51,7 @@ fun EditFlashCardScreen(navController: NavController,
         Column(
             modifier = Modifier
                 .padding(16.dp)
+                .verticalScroll(scrollState)
         ) {
 
             Row(

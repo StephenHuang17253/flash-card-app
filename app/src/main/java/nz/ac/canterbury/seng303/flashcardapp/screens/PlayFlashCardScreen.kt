@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -50,13 +52,16 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
 
     val isSummaryVisible = flashCards.isNotEmpty() && answersHistory.size == flashCards.size
 
+    val scrollState = rememberScrollState()
 
     ElevatedCard(
 //        colors = CardColors(Color.hsl(210F, 100F, 80F), Color.Black, Color.Black, Color.Black),
         modifier = Modifier
             .padding(16.dp)
     ) {
-        Column {
+        Column(
+            modifier = Modifier.verticalScroll(scrollState)
+        ) {
 
             Row(
                 modifier = Modifier

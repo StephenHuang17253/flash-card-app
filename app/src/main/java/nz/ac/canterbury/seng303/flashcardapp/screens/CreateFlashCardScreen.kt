@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ElevatedCard
@@ -42,6 +44,7 @@ fun CreateFlashCard(navController: NavController,
     val context = LocalContext.current
     var answerFields by rememberSaveable { mutableStateOf(answers.toMutableList()) }
     var nextId by rememberSaveable { mutableStateOf(answerFields.size) }
+    val scrollState = rememberScrollState()
 
     ElevatedCard(
         modifier = Modifier.padding(16.dp)
@@ -49,6 +52,7 @@ fun CreateFlashCard(navController: NavController,
         Column(
             modifier = Modifier
                 .padding(16.dp)
+                .verticalScroll(scrollState)
         ) {
 
             Row(
