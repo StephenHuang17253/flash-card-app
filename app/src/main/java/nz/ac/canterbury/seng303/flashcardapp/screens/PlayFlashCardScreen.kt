@@ -30,6 +30,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,10 +45,10 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
     flashCardViewModel.getCards()
     val flashCards by flashCardViewModel.flashCards.collectAsState(emptyList())
 
-    val (currentIndex, setCurrentIndex) = remember { mutableStateOf(0) }
-    val (selectedAnswer, setSelectedAnswer) = remember { mutableStateOf<FlashCardAnswer?>(null) }
-    val (answerSubmitted, setAnswerSubmitted) = remember { mutableStateOf(false) }
-    val (answersHistory, setAnswersHistory) = remember { mutableStateOf(emptyList<Pair<FlashCardAnswer?, Boolean>>()) }
+    val (currentIndex, setCurrentIndex) = rememberSaveable { mutableStateOf(0) }
+    val (selectedAnswer, setSelectedAnswer) = rememberSaveable { mutableStateOf<Int?>(null) }
+    val (answerSubmitted, setAnswerSubmitted) = rememberSaveable { mutableStateOf(false) }
+    val (answersHistory, setAnswersHistory) = rememberSaveable { mutableStateOf(emptyList<Pair<Int?, Boolean>>()) }
     val context = LocalContext.current
 
     val isSummaryVisible = flashCards.isNotEmpty() && answersHistory.size == flashCards.size
@@ -55,7 +56,7 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
     val scrollState = rememberScrollState()
 
     ElevatedCard(
-//        colors = CardColors(Color.hsl(210F, 100F, 80F), Color.Black, Color.Black, Color.Black),
+//        colors = CardColors(Color.Cyan, Color.Black, Color.Black, Color.Black),
         modifier = Modifier
             .padding(16.dp)
     ) {
@@ -116,8 +117,8 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
                                 ) {
                                     // Checkbox for each answer
                                     RadioButton(
-                                        selected = (answer == selectedAnswer),
-                                        onClick = { setSelectedAnswer(answer) }
+                                        selected = (answer.id == selectedAnswer),
+                                        onClick = { setSelectedAnswer(answer.id) }
                                     )
                                     Text(
                                         text = answer.text,
@@ -132,7 +133,7 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
                         LaunchedEffect(selectedAnswer, answerSubmitted) {
                             if (answerSubmitted) {
                                 selectedAnswer?.let {
-                                    if (it.id == flashCard.correctAnswer) {
+                                    if (it == flashCard.correctAnswer) {
                                         Toast.makeText(context, "Correct answer!", Toast.LENGTH_SHORT).show()
                                         setAnswersHistory(answersHistory + (selectedAnswer to true))
                                     } else {
@@ -198,23 +199,29 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
                             // Display detailed results with icons
                             answersHistory.forEachIndexed { index, (answer, isCorrect) ->
                                 val question = flashCards.getOrNull(index)?.question ?: "Unknown Question"
-
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically
+                                ElevatedCard(
+                                    modifier = Modifier
+                                        .padding(16.dp)
                                 ) {
-                                    Text(
-                                        text = "Q${index + 1}. $question",
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        modifier = Modifier.weight(1f)
-                                    )
-                                    Icon(
-                                        imageVector = if (isCorrect) Icons.Filled.Check else Icons.Filled.Close,
-                                        contentDescription = if (isCorrect) "Correct" else "Incorrect",
-                                        tint = if (isCorrect) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
-                                        modifier = Modifier.size(24.dp)
-                                    )
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = "Q${index + 1}. $question",
+                                            style = MaterialTheme.typography.bodyLarge,
+                                            modifier = Modifier
+                                                .weight(1f)
+                                                .padding(16.dp)
+                                        )
+                                        Icon(
+                                            imageVector = if (isCorrect) Icons.Filled.Check else Icons.Filled.Close,
+                                            contentDescription = if (isCorrect) "Correct" else "Incorrect",
+                                            tint = if (isCorrect) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
+                                            modifier = Modifier.size(24.dp)
+                                        )
+                                    }
                                 }
-                                HorizontalDivider()
+//                                HorizontalDivider()
                             }
 
                         }
