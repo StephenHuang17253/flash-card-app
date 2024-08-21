@@ -115,6 +115,48 @@ fun EditFlashCardScreen(navController: NavController,
 
             Button(
                 onClick = {
+                    // Input validation
+                    if (editFlashCardViewModel.question.isBlank()) {
+                        val builder = AlertDialog.Builder(context)
+                        builder.setMessage("A flash card can't have an empty question.")
+                            .setCancelable(false)
+                            .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }
+                        val alert = builder.create()
+                        alert.show()
+                        return@Button
+                    }
+
+                    if (editFlashCardViewModel.answers.size < 2) {
+                        val builder = AlertDialog.Builder(context)
+                        builder.setMessage("A flash card must have at least 2 answers.")
+                            .setCancelable(false)
+                            .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }
+                        val alert = builder.create()
+                        alert.show()
+                        return@Button
+                    }
+
+                    if (editFlashCardViewModel.answers.any { it.text.trim().isEmpty() }) {
+                        val builder = AlertDialog.Builder(context)
+                        builder.setMessage("An answer cannot be blank.")
+                            .setCancelable(false)
+                            .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }
+                        val alert = builder.create()
+                        alert.show()
+                        return@Button
+                    }
+
+                    if (editFlashCardViewModel.correctAnswerIndex !in editFlashCardViewModel.answers.map {it.id}) {
+                        val builder = AlertDialog.Builder(context)
+                        builder.setMessage("A flash card must have 1 correct answer.")
+                            .setCancelable(false)
+                            .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }
+                        val alert = builder.create()
+                        alert.show()
+                        return@Button
+                    }
+
+
                     flashCardViewModel.editFlashCard(
                         cardId = cardId,
                         FlashCard(id = cardId,
