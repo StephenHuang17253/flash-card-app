@@ -38,44 +38,44 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import nz.ac.canterbury.seng303.flashcardapp.models.FlashCardAnswer
 import nz.ac.canterbury.seng303.flashcardapp.viewmodels.FlashCardViewModel
+import nz.ac.canterbury.seng303.flashcardapp.viewmodels.PlayFlashCardViewModel
 
 @Composable
-fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
+fun PlayFlashCards(
+    flashCardViewModel: FlashCardViewModel,
+    playFlashCardViewModel: PlayFlashCardViewModel = viewModel()
+) {
     flashCardViewModel.getCards()
     val flashCards by flashCardViewModel.flashCards.collectAsState(emptyList())
-
-    // Shuffle the flash cards within this composable
-    val shuffledFlashCards = rememberSaveable(flashCards) {
-        flashCards.shuffled()
-    }
-
-    val (currentIndex, setCurrentIndex) = rememberSaveable { mutableStateOf(0) }
-    val (selectedAnswer, setSelectedAnswer) = rememberSaveable { mutableStateOf<Int?>(null) }
-    val (answerSubmitted, setAnswerSubmitted) = rememberSaveable { mutableStateOf(false) }
-    val (answersHistory, setAnswersHistory) = rememberSaveable { mutableStateOf(emptyList<Pair<Int?, Boolean>>()) }
+    val shuffledFlashCards by playFlashCardViewModel.flashCards.collectAsState()
+    val currentIndex by playFlashCardViewModel.currentIndex.collectAsState()
+    val selectedAnswer by playFlashCardViewModel.selectedAnswer.collectAsState()
+    val answerSubmitted by playFlashCardViewModel.answerSubmitted.collectAsState()
+    val answersHistory by playFlashCardViewModel.answersHistory.collectAsState()
     val context = LocalContext.current
+
+    if (flashCards.isNotEmpty() && shuffledFlashCards.isEmpty()) {
+        playFlashCardViewModel.setFlashCards(flashCards)
+    }
 
     val isSummaryVisible = shuffledFlashCards.isNotEmpty() && answersHistory.size == shuffledFlashCards.size
     val scrollState = rememberScrollState()
     val bookPaperColor = Color(0xFFFFF8E1)
 
     ElevatedCard(
-//        colors = CardDefaults.cardColors(containerColor = greyPaperColor),
-        modifier = Modifier
-            .padding(16.dp)
+        modifier = Modifier.padding(16.dp)
     ) {
         Column(
             modifier = Modifier.verticalScroll(scrollState)
         ) {
-
             Row(
                 modifier = Modifier
                     .padding(16.dp),
                 horizontalArrangement = Arrangement.Center
-            )
-            {
+            ) {
                 Text(
                     text = "Playing Flash Cards",
                     style = MaterialTheme.typography.headlineLarge
@@ -91,15 +91,12 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
                             .padding(16.dp)
                             .fillMaxWidth()
                     ) {
-
-                        // Display progress counter
                         Text(
                             text = "Question ${currentIndex + 1} of ${shuffledFlashCards.size}",
                             style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier.padding(bottom = 16.dp)
                         )
 
-                        // Display question
                         Text(
                             text = flashCard.question,
                             style = MaterialTheme.typography.headlineMedium,
@@ -112,7 +109,6 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
                         )
 
-                        // Display answers with checkboxes
                         Column(modifier = Modifier.padding(bottom = 16.dp)) {
                             flashCard.answers.forEachIndexed { index, answer ->
                                 Row(
@@ -121,10 +117,9 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
                                         .padding(vertical = 4.dp),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    // Checkbox for each answer
                                     RadioButton(
                                         selected = (answer.id == selectedAnswer),
-                                        onClick = { setSelectedAnswer(answer.id) }
+                                        onClick = { playFlashCardViewModel.setSelectedAnswer(answer.id) }
                                     )
                                     Text(
                                         text = answer.text,
@@ -135,30 +130,12 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
                             }
                         }
 
-                        // Show toast message and navigate to the next flash card
                         LaunchedEffect(selectedAnswer, answerSubmitted) {
                             if (answerSubmitted) {
-                                selectedAnswer?.let {
-                                    if (it == flashCard.correctAnswer) {
-                                        Toast.makeText(context, "Correct answer!", Toast.LENGTH_SHORT).show()
-                                        setAnswersHistory(answersHistory + (selectedAnswer to true))
-                                    } else {
-                                        val correctAnswer = flashCard.answers.find { it.id == flashCard.correctAnswer }
-                                        Toast.makeText(context, "Incorrect. The correct answer is: ${correctAnswer?.text}", Toast.LENGTH_SHORT).show()
-                                        setAnswersHistory(answersHistory + (selectedAnswer to false))
-                                    }
-                                }
-                                // Move to the next flash card
-                                if (currentIndex < shuffledFlashCards.size - 1) {
-                                    setCurrentIndex(currentIndex + 1)
-
-                                }
-                                setSelectedAnswer(null)  // Reset selected answer
-                                setAnswerSubmitted(false) // Reset submission state
+                                playFlashCardViewModel.submitAnswer()
                             }
                         }
 
-                        // Navigation buttons
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -169,7 +146,7 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
                             Button(
                                 onClick = {
                                     if (selectedAnswer != null) {
-                                        setAnswerSubmitted(true)
+                                        playFlashCardViewModel.setAnswerSubmitted(true)
                                     } else {
                                         Toast.makeText(context, "Select an answer to submit.", Toast.LENGTH_SHORT).show()
                                     }
@@ -189,8 +166,7 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
                             modifier = Modifier
                                 .padding(16.dp)
                                 .fillMaxWidth(),
-
-                            ) {
+                        ) {
                             Text(
                                 text = "Summary",
                                 style = MaterialTheme.typography.headlineMedium,
@@ -202,12 +178,10 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
                                 modifier = Modifier.padding(bottom = 16.dp)
                             )
                             HorizontalDivider()
-                            // Display detailed results with icons
                             answersHistory.forEachIndexed { index, (answer, isCorrect) ->
                                 val question = shuffledFlashCards.getOrNull(index)?.question ?: "Unknown Question"
                                 ElevatedCard(
-                                    modifier = Modifier
-                                        .padding(16.dp),
+                                    modifier = Modifier.padding(16.dp),
                                     colors = CardDefaults.cardColors(containerColor = bookPaperColor),
                                 ) {
                                     Row(
@@ -228,13 +202,10 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
                                         )
                                     }
                                 }
-//                                HorizontalDivider()
                             }
-
                         }
                     }
                 }
-
             } else {
                 Box(
                     modifier = Modifier
@@ -249,12 +220,7 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
                         )
                     }
                 }
-
             }
         }
-
-
     }
-
-
 }

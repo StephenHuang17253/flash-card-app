@@ -49,6 +49,10 @@ data class FlashCard(
         }
     }
 
+    fun getShuffledAnswers(): List<FlashCardAnswer> {
+        return answers.shuffled()
+    }
+
     override fun getIdentifier(): Int {
         return id;
     }
