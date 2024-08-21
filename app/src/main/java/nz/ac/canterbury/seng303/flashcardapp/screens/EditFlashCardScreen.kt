@@ -6,6 +6,8 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -98,13 +100,27 @@ fun EditFlashCardScreen(navController: NavController,
                             .padding(end = 8.dp)
                     )
 
+                    // Checkbox to mark correct answer
                     Checkbox(
                         checked = editFlashCardViewModel.correctAnswerIndex == index,
                         onCheckedChange = { isChecked ->
                             if (isChecked) editFlashCardViewModel.updateCorrectAnswerIndex(index)
                         }
                     )
-                    Text(text = "Correct")
+//                    Text(text = "Correct")
+
+                    // X Button for removing an answer
+                    IconButton(onClick = {
+                        editFlashCardViewModel.removeAnswer(answer.id)
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.Close, // Use the Close icon
+                            contentDescription = "Remove Answer",
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                    }
+
+
                 }
             }
 

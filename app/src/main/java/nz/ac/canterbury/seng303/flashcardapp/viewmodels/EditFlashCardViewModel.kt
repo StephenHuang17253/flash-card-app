@@ -32,6 +32,13 @@ class EditFlashCardViewModel : ViewModel() {
         }
     }
 
+    fun removeAnswer(id: Int) {
+        answers = answers.filter { it.id != id }.toMutableList()
+        if (correctAnswerIndex == id) {
+            correctAnswerIndex = -1
+        }
+    }
+
     var correctAnswerIndex by mutableStateOf(-1)
         private set
 
