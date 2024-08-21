@@ -10,10 +10,14 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -27,23 +31,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import nz.ac.canterbury.seng303.flashcardapp.models.FlashCardAnswer
+import nz.ac.canterbury.seng303.flashcardapp.viewmodels.CreateFlashCardViewModel
+import nz.ac.canterbury.seng303.flashcardapp.viewmodels.EditFlashCardViewModel
 import java.util.UUID
 
 @Composable
 fun CreateFlashCard(navController: NavController,
-                    question: String,
-                    onQuestionChange: (String) -> Unit,
-                    answers: List<FlashCardAnswer>,
-                    onAnswerChange: (Int, String) -> Unit,
-                    correctAnswerId: Int,
-                    onCorrectAnswerChange: (Int) -> Unit,
-                    createFlashCardFn: (String, List<FlashCardAnswer>, Int) -> Unit
+                    createFlashCardFn: (String, List<FlashCardAnswer>, Int) -> Unit,
+                    createFlashCardViewModel: CreateFlashCardViewModel = viewModel()
                ) {
     val context = LocalContext.current
-    var answerFields by rememberSaveable { mutableStateOf(answers.toMutableList()) }
-    var nextId by rememberSaveable { mutableStateOf(answerFields.size) }
     val scrollState = rememberScrollState()
 
     ElevatedCard(
@@ -71,8 +71,8 @@ fun CreateFlashCard(navController: NavController,
 
 
             OutlinedTextField(
-                value = question,
-                onValueChange = { onQuestionChange(it) },
+                value = createFlashCardViewModel.question,
+                onValueChange = { createFlashCardViewModel.updateQuestion(it) },
                 label = { Text("Question") },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -82,7 +82,7 @@ fun CreateFlashCard(navController: NavController,
             )
 
             // Answer inputs
-            answerFields.forEachIndexed { index, answer ->
+            createFlashCardViewModel.answers.forEachIndexed { index, answer ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -93,8 +93,7 @@ fun CreateFlashCard(navController: NavController,
                     OutlinedTextField(
                         value = answer.text,
                         onValueChange = { newAnswerText ->
-                            onAnswerChange(answer.id, newAnswerText)
-                            answerFields = answerFields.map { if (it.id == answer.id) it.copy(text = newAnswerText) else it }.toMutableList()
+                            createFlashCardViewModel.updateAnswer(answer.id, newAnswerText)
                         },
                         label = { Text("Answer ${index + 1}") },
                         modifier = Modifier
@@ -104,24 +103,33 @@ fun CreateFlashCard(navController: NavController,
 
                     // Checkbox for correct answer
                     Checkbox(
-                        checked = correctAnswerId == answer.id,
+                        checked = createFlashCardViewModel.correctAnswerId == answer.id,
                         onCheckedChange = { isChecked ->
-                            if (isChecked) {
-                                onCorrectAnswerChange(answer.id)
-                            }
+                            if (isChecked) createFlashCardViewModel.updateCorrectAnswer(answer.id)
                         }
                     )
                     Text(text = "Correct")
+
+                    // X Button for removing an answer
+                    IconButton(onClick = {
+                        createFlashCardViewModel.removeAnswer(answer.id)
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.Close, // Use the Close icon
+                            contentDescription = "Remove Answer",
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                    }
                 }
+
+
             }
 
             // Button to add more answer fields
             Button(
                 onClick = {
-                    if (answerFields.size < 5) {
-                        val newId = nextId // Use the counter value for the new ID
-                        nextId++ // Increment the counter for the next ID
-                        answerFields = answerFields.toMutableList().apply { add(FlashCardAnswer(newId, "")) }
+                    if (createFlashCardViewModel.answers.size < 5) {
+                        createFlashCardViewModel.addAnswer()
                     }
                 },
                 modifier = Modifier
@@ -134,7 +142,7 @@ fun CreateFlashCard(navController: NavController,
             Button(
                 onClick = {
                     // Input validation
-                    if (question.isBlank()) {
+                    if (createFlashCardViewModel.question.isBlank()) {
                         val builder = AlertDialog.Builder(context)
                         builder.setMessage("A flash card can't have an empty question.")
                             .setCancelable(false)
@@ -144,7 +152,7 @@ fun CreateFlashCard(navController: NavController,
                         return@Button
                     }
 
-                    if (answerFields.size < 2) {
+                    if (createFlashCardViewModel.answers.size < 2) {
                         val builder = AlertDialog.Builder(context)
                         builder.setMessage("A flash card must have at least 2 answers.")
                             .setCancelable(false)
@@ -154,7 +162,7 @@ fun CreateFlashCard(navController: NavController,
                         return@Button
                     }
 
-                    if (answerFields.any { it.text.trim().isEmpty() }) {
+                    if (createFlashCardViewModel.answers.any { it.text.trim().isEmpty() }) {
                         val builder = AlertDialog.Builder(context)
                         builder.setMessage("An answer cannot be blank.")
                             .setCancelable(false)
@@ -164,7 +172,7 @@ fun CreateFlashCard(navController: NavController,
                         return@Button
                     }
 
-                    if (correctAnswerId !in answerFields.map {it.id}) {
+                    if (createFlashCardViewModel.correctAnswerId !in createFlashCardViewModel.answers.map {it.id}) {
                         val builder = AlertDialog.Builder(context)
                         builder.setMessage("A flash card must have 1 correct answer.")
                             .setCancelable(false)
@@ -174,15 +182,11 @@ fun CreateFlashCard(navController: NavController,
                         return@Button
                     }
 
-                    createFlashCardFn(question, answerFields, correctAnswerId)
+                    createFlashCardFn(createFlashCardViewModel.question, createFlashCardViewModel.answers, createFlashCardViewModel.correctAnswerId)
                     val builder = AlertDialog.Builder(context)
                     builder.setMessage("Created flash card!")
                         .setCancelable(false)
                         .setPositiveButton("Ok") { dialog, id -> /* Run some code on click */
-                            onQuestionChange("")
-                            answerFields.forEach{ answer ->
-                                onAnswerChange(answer.id, "")
-                            }
                             navController.navigate("FlashCardList")
                         }
                         .setNegativeButton("Cancel") { dialog, id ->

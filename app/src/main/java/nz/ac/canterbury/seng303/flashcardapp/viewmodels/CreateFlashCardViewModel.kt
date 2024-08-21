@@ -19,18 +19,26 @@ class CreateFlashCardViewModel: ViewModel() {
         question = newQuestion
     }
 
-    var answers by mutableStateOf(mutableStateListOf<FlashCardAnswer>())
+    var answers by mutableStateOf(mutableListOf<FlashCardAnswer>())
         private set
 
     fun updateAnswer(id: Int, newAnswer: String) {
-        val answer = answers.find { it.id == id }
-        answer?.text = newAnswer
+        answers = answers.map { if (it.id == id) it.copy(text = newAnswer) else it }.toMutableList()
         }
 
     fun addAnswer() {
         if (answers.size < 5) {
-            val newId = UUID.randomUUID().toString().hashCode()
-            answers.add(FlashCardAnswer(newId, ""))
+            val newId = UUID.randomUUID().toString().hashCode() // Generate a unique ID
+            answers = answers.toMutableList().apply {
+                add(FlashCardAnswer(newId, ""))
+            }
+        }
+    }
+
+    fun removeAnswer(id: Int) {
+        answers = answers.filter { it.id != id }.toMutableList()
+        if (correctAnswerId == id) {
+            correctAnswerId = -1
         }
     }
 
