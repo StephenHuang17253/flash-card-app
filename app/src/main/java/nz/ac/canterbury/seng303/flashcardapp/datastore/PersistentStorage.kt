@@ -1,13 +1,17 @@
 package nz.ac.canterbury.seng303.flashcardapp.datastore
 
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import nz.ac.canterbury.seng303.flashcardapp.models.FlashCard
 import nz.ac.canterbury.seng303.flashcardapp.models.Identifiable
 import java.lang.reflect.Type
 
@@ -18,24 +22,30 @@ class PersistentStorage<T> (
     private val preferenceKey: Preferences.Key<String>
 ) : Storage <T> where T: Identifiable {
 
+    private val flashCardListType = TypeToken.getParameterized(List::class.java, FlashCard::class.java).type
+
+
     override fun insert(data: T): Flow<Int> {
         return flow {
             val cachedDataClone = getAll().first().toMutableList()
+            Log.d("PersistentStorage", "Inserting data: $data")
             cachedDataClone.add(data)
             dataStore.edit {
-                val jsonString = gson.toJson(cachedDataClone, type)
+                val jsonString = gson.toJson(cachedDataClone, flashCardListType)
+                Log.d("PersistentStorage", "JSON String after insert: $jsonString")
                 it[preferenceKey] = jsonString
                 emit(OPERATION_SUCCESS)
             }
         }
     }
 
+
     override fun insertAll(data: List<T>): Flow<Int> {
         return flow {
             val cachedDataClone = getAll().first().toMutableList()
             cachedDataClone.addAll(data)
             dataStore.edit {
-                val jsonString = gson.toJson(cachedDataClone, type)
+                val jsonString = gson.toJson(cachedDataClone, flashCardListType)
                 it[preferenceKey] = jsonString
                 emit(OPERATION_SUCCESS)
             }
@@ -45,10 +55,16 @@ class PersistentStorage<T> (
     override fun getAll(): Flow<List<T>> {
         return dataStore.data.map { preferences ->
             val jsonString = preferences[preferenceKey] ?: EMPTY_JSON_STRING
-            val elements = gson.fromJson<List<T>>(jsonString, type)
-            elements
+            Log.d("PersistentStorage", "Retrieved JSON: $jsonString")
+            try {
+                gson.fromJson(jsonString, flashCardListType)
+            } catch (e: JsonSyntaxException) {
+                Log.e("JsonError", "Error parsing JSON: $jsonString", e)
+                emptyList()
+            }
         }
     }
+
 
 
 
@@ -59,7 +75,7 @@ class PersistentStorage<T> (
             if (index != -1) {
                 cachedDataClone[index] = data
                 dataStore.edit {
-                    val jsonString = gson.toJson(cachedDataClone, type)
+                    val jsonString = gson.toJson(cachedDataClone, flashCardListType)
                     it[preferenceKey] = jsonString
                     emit(OPERATION_SUCCESS)
                 }
@@ -81,7 +97,7 @@ class PersistentStorage<T> (
             val cachedDataClone = getAll().first().toMutableList()
             val updatedData = cachedDataClone.filterNot { it.getIdentifier() == identifier }
             dataStore.edit {
-                val jsonString = gson.toJson(updatedData, type)
+                val jsonString = gson.toJson(updatedData, flashCardListType)
                 it[preferenceKey] = jsonString
                 emit(OPERATION_SUCCESS)
             }
