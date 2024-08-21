@@ -1,17 +1,14 @@
 package nz.ac.canterbury.seng303.flashcardapp.screens
 
 import android.app.AlertDialog
-import android.text.Html
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -103,9 +100,9 @@ fun EditFlashCardScreen(navController: NavController,
 
                     // Checkbox to mark correct answer
                     Checkbox(
-                        checked = editFlashCardViewModel.correctAnswerIndex == index,
+                        checked = editFlashCardViewModel.correctAnswerId == answer.id,
                         onCheckedChange = { isChecked ->
-                            if (isChecked) editFlashCardViewModel.updateCorrectAnswerIndex(index)
+                            if (isChecked) editFlashCardViewModel.updateCorrectAnswerId(answer.id)
                         }
                     )
 //                    Text(text = "Correct")
@@ -168,7 +165,7 @@ fun EditFlashCardScreen(navController: NavController,
                         return@Button
                     }
 
-                    if (editFlashCardViewModel.correctAnswerIndex !in editFlashCardViewModel.answers.map {it.id}) {
+                    if (editFlashCardViewModel.correctAnswerId !in editFlashCardViewModel.answers.map {it.id}) {
                         val builder = AlertDialog.Builder(context)
                         builder.setMessage("A flash card must have 1 correct answer.")
                             .setCancelable(false)
@@ -184,7 +181,7 @@ fun EditFlashCardScreen(navController: NavController,
                         FlashCard(id = cardId,
                             question = editFlashCardViewModel.question,
                             answers = editFlashCardViewModel.answers,
-                            correctAnswer = editFlashCardViewModel.correctAnswerIndex,
+                            correctAnswer = editFlashCardViewModel.correctAnswerId,
                             timestamp = System.currentTimeMillis()))
 
                     Toast.makeText(context, "Flash card edited.", Toast.LENGTH_SHORT).show()

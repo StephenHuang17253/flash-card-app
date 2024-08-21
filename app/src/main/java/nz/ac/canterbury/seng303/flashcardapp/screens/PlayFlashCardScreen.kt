@@ -46,13 +46,18 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
     flashCardViewModel.getCards()
     val flashCards by flashCardViewModel.flashCards.collectAsState(emptyList())
 
+    // Shuffle the flash cards within this composable
+    val shuffledFlashCards = rememberSaveable(flashCards) {
+        flashCards.shuffled()
+    }
+
     val (currentIndex, setCurrentIndex) = rememberSaveable { mutableStateOf(0) }
     val (selectedAnswer, setSelectedAnswer) = rememberSaveable { mutableStateOf<Int?>(null) }
     val (answerSubmitted, setAnswerSubmitted) = rememberSaveable { mutableStateOf(false) }
     val (answersHistory, setAnswersHistory) = rememberSaveable { mutableStateOf(emptyList<Pair<Int?, Boolean>>()) }
     val context = LocalContext.current
 
-    val isSummaryVisible = flashCards.isNotEmpty() && answersHistory.size == flashCards.size
+    val isSummaryVisible = shuffledFlashCards.isNotEmpty() && answersHistory.size == shuffledFlashCards.size
     val scrollState = rememberScrollState()
     val bookPaperColor = Color(0xFFFFF8E1)
 
@@ -77,9 +82,9 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
                 )
             }
 
-            if (flashCards.isNotEmpty()) {
+            if (shuffledFlashCards.isNotEmpty()) {
                 if (!isSummaryVisible) {
-                    val flashCard = flashCards[currentIndex]
+                    val flashCard = shuffledFlashCards[currentIndex]
 
                     Column(
                         modifier = Modifier
@@ -89,7 +94,7 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
 
                         // Display progress counter
                         Text(
-                            text = "Question ${currentIndex + 1} of ${flashCards.size}",
+                            text = "Question ${currentIndex + 1} of ${shuffledFlashCards.size}",
                             style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier.padding(bottom = 16.dp)
                         )
@@ -144,7 +149,7 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
                                     }
                                 }
                                 // Move to the next flash card
-                                if (currentIndex < flashCards.size - 1) {
+                                if (currentIndex < shuffledFlashCards.size - 1) {
                                     setCurrentIndex(currentIndex + 1)
 
                                 }
@@ -199,7 +204,7 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
                             HorizontalDivider()
                             // Display detailed results with icons
                             answersHistory.forEachIndexed { index, (answer, isCorrect) ->
-                                val question = flashCards.getOrNull(index)?.question ?: "Unknown Question"
+                                val question = shuffledFlashCards.getOrNull(index)?.question ?: "Unknown Question"
                                 ElevatedCard(
                                     modifier = Modifier
                                         .padding(16.dp),

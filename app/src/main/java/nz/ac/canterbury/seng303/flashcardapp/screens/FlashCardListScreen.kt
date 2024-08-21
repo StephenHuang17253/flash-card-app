@@ -57,7 +57,7 @@ fun FlashCardList(navController: NavController, flashCardViewModel: FlashCardVie
     ) {
         if (flashCards.isEmpty()) {
             Text(
-                text = "There are no cards created.",
+                text = "There are no cards created.\nPlease create some cards!",
                 style = MaterialTheme.typography.headlineMedium
             )
         }

@@ -34,23 +34,23 @@ class EditFlashCardViewModel : ViewModel() {
 
     fun removeAnswer(id: Int) {
         answers = answers.filter { it.id != id }.toMutableList()
-        if (correctAnswerIndex == id) {
-            correctAnswerIndex = -1
+        if (correctAnswerId == id) {
+            correctAnswerId = -1
         }
     }
 
-    var correctAnswerIndex by mutableStateOf(-1)
+    var correctAnswerId by mutableStateOf(-1)
         private set
 
-    fun updateCorrectAnswerIndex(index: Int) {
-        correctAnswerIndex = index
+    fun updateCorrectAnswerId(id: Int) {
+        correctAnswerId = id
     }
 
     fun setDefaultValues(card: FlashCard?) {
         card?.let {
             question = it.question
             answers = it.answers.toMutableList()
-            correctAnswerIndex = it.correctAnswer
+            correctAnswerId = it.correctAnswer
         }
     }
 }
