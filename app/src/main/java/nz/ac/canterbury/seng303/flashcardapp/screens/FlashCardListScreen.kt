@@ -21,7 +21,9 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -60,6 +62,7 @@ fun FlashCardList(navController: NavController, flashCardViewModel: FlashCardVie
         }
     }
 
+
     Column {
         Row(
             modifier = Modifier
@@ -72,11 +75,11 @@ fun FlashCardList(navController: NavController, flashCardViewModel: FlashCardVie
                 style = MaterialTheme.typography.headlineLarge
             )
         }
-        HorizontalDivider()
+//        HorizontalDivider()
         LazyColumn {
             items(flashCards) { flashCard ->
                 FlashCardItem(navController = navController, flashCard = flashCard, flashCardViewModel)
-                HorizontalDivider() // Add a divider between items
+//                HorizontalDivider() // Add a divider between items
             }
         }
     }
@@ -86,101 +89,107 @@ fun FlashCardList(navController: NavController, flashCardViewModel: FlashCardVie
 @Composable
 fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashCardViewModel: FlashCardViewModel) {
     val context = LocalContext.current
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .clickable { navController.navigate("FlashCard/${flashCard.id}") },
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+
+    ElevatedCard(
+        modifier = Modifier.
+        padding(16.dp)
     ) {
-        // Display title and timestamp
-        Column(
+        Row(
             modifier = Modifier
-                .weight(3f)
                 .fillMaxWidth()
+                .padding(16.dp)
+                .clickable { navController.navigate("FlashCard/${flashCard.id}") },
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = flashCard.question,
-                style = MaterialTheme.typography.headlineSmall,
-                maxLines = 3,
-                overflow = TextOverflow.Ellipsis
-            )
-            Text(
-                text = convertTimestampToReadableTime(flashCard.timestamp),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            // Display edit and delete buttons (icons)
-            Row(
-                horizontalArrangement = Arrangement.Center,
+            // Display title and timestamp
+            Column(
                 modifier = Modifier
+                    .weight(3f)
                     .fillMaxWidth()
-
-
             ) {
-                Button(onClick = {
-                    val builder = AlertDialog.Builder(context)
-                    builder.setMessage("Google this question?\n\n \"${flashCard.question}\"?")
-                        .setCancelable(false)
-                        .setPositiveButton("Yes") { dialog, id ->
-                            val encodedQuestion = Uri.encode(flashCard.question)
-                            val searchUrl = "https://www.google.com/search?q=$encodedQuestion"
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(searchUrl))
-                            try {
-                                context.startActivity(intent)
-                            } catch (e: Exception) {
-                                Toast.makeText(context, "No application to handle this action.", Toast.LENGTH_SHORT).show()
-                            }
-                            dialog.dismiss()
-                        }
-                        .setNegativeButton("Cancel") { dialog, id ->
-                            // Dismiss the dialog
-                            dialog.dismiss()
-                        }
-                    val alert = builder.create()
-                    alert.show()
-                }) {
-                    Icon(
-                        imageVector = Icons.Filled.Search,
-                        contentDescription = "Search",
-                        tint = Color.White
-                    )
-                }
+                Text(
+                    text = flashCard.question,
+                    style = MaterialTheme.typography.headlineSmall,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = convertTimestampToReadableTime(flashCard.timestamp),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                // Display edit and delete buttons (icons)
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
 
-                Button(onClick = {
-                            navController.navigate("EditFlashCard/${flashCard.id}")
-                }) {
-                    Icon(
-                        imageVector = Icons.Filled.Edit,
-                        contentDescription = "Edit",
-                        tint = Color.White
-                    )
-                }
-                Button(onClick = {
-                    val builder = AlertDialog.Builder(context)
-                    builder.setMessage("Are you sure you want to delete this flash card?")
-                        .setCancelable(false)
-                        .setPositiveButton(Html.fromHtml("<font color='#FF0000'>Delete</font>")) { dialog, id ->
-                            flashCardViewModel.deleteFlashCard(flashCard.id)
-                            Toast.makeText(context, "Flash card deleted.", Toast.LENGTH_SHORT).show()
-                            dialog.dismiss()
-                        }
-                        .setNegativeButton("Cancel") { dialog, id ->
-                            // Dismiss the dialog
-                            dialog.dismiss()
-                        }
-                    val alert = builder.create()
-                    alert.show()
-                }) {
-                    Icon(
-                        imageVector = Icons.Filled.Delete,
-                        contentDescription = "Delete",
-                        tint = Color.White
-                    )
+
+                ) {
+                    Button(onClick = {
+                        val builder = AlertDialog.Builder(context)
+                        builder.setMessage("Google this question?\n\n \"${flashCard.question}\"?")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes") { dialog, id ->
+                                val encodedQuestion = Uri.encode(flashCard.question)
+                                val searchUrl = "https://www.google.com/search?q=$encodedQuestion"
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(searchUrl))
+                                try {
+                                    context.startActivity(intent)
+                                } catch (e: Exception) {
+                                    Toast.makeText(context, "No application to handle this action.", Toast.LENGTH_SHORT).show()
+                                }
+                                dialog.dismiss()
+                            }
+                            .setNegativeButton("Cancel") { dialog, id ->
+                                // Dismiss the dialog
+                                dialog.dismiss()
+                            }
+                        val alert = builder.create()
+                        alert.show()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = "Search",
+                            tint = Color.White
+                        )
+                    }
+
+                    Button(onClick = {
+                        navController.navigate("EditFlashCard/${flashCard.id}")
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.Edit,
+                            contentDescription = "Edit",
+                            tint = Color.White
+                        )
+                    }
+                    Button(onClick = {
+                        val builder = AlertDialog.Builder(context)
+                        builder.setMessage("Are you sure you want to delete this flash card?")
+                            .setCancelable(false)
+                            .setPositiveButton(Html.fromHtml("<font color='#FF0000'>Delete</font>")) { dialog, id ->
+                                flashCardViewModel.deleteFlashCard(flashCard.id)
+                                Toast.makeText(context, "Flash card deleted.", Toast.LENGTH_SHORT).show()
+                                dialog.dismiss()
+                            }
+                            .setNegativeButton("Cancel") { dialog, id ->
+                                // Dismiss the dialog
+                                dialog.dismiss()
+                            }
+                        val alert = builder.create()
+                        alert.show()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "Delete",
+                            tint = Color.White
+                        )
+                    }
+
                 }
 
             }
-
         }
     }
 }

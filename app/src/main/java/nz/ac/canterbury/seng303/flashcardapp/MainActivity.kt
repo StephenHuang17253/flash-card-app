@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -129,27 +130,33 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Home(navController: NavController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+
+    ElevatedCard(
+        modifier = Modifier.padding(8.dp)
     ) {
-    Text(
-        text = "My Flash Card App",
-        style = MaterialTheme.typography.headlineLarge,
-        modifier = Modifier
-            .padding(16.dp)
-        )
-        Button(onClick = { navController.navigate("FlashCardList") }) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Text(
-                text = "View Flash Cards")
-        }
-        Button(onClick = { navController.navigate("CreateFlashCard") }) {
-            Text("Create Flash Card")
-        }
-        Button(onClick = { navController.navigate("PlayFlashCard") }) {
-            Text("Play Flash Cards")
+                text = "My Flash Card App",
+                style = MaterialTheme.typography.headlineLarge,
+                modifier = Modifier
+                    .padding(16.dp)
+            )
+            Button(onClick = { navController.navigate("FlashCardList") }) {
+                Text(
+                    text = "View Flash Cards")
+            }
+            Button(onClick = { navController.navigate("CreateFlashCard") }) {
+                Text("Create Flash Card")
+            }
+            Button(onClick = { navController.navigate("PlayFlashCard") }) {
+                Text("Play Flash Cards")
+            }
         }
     }
+
 }
