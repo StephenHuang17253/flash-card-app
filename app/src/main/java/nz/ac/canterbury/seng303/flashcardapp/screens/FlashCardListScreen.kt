@@ -21,6 +21,8 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
@@ -47,7 +49,6 @@ import nz.ac.canterbury.seng303.flashcardapp.viewmodels.FlashCardViewModel
 fun FlashCardList(navController: NavController, flashCardViewModel: FlashCardViewModel) {
     flashCardViewModel.getCards()
     val flashCards: List<FlashCard> by flashCardViewModel.flashCards.collectAsState(emptyList())
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -89,10 +90,11 @@ fun FlashCardList(navController: NavController, flashCardViewModel: FlashCardVie
 @Composable
 fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashCardViewModel: FlashCardViewModel) {
     val context = LocalContext.current
-
+    val bookPaperColor = Color(0xFFFFF8E1)
     ElevatedCard(
         modifier = Modifier.
-        padding(16.dp)
+        padding(16.dp),
+        colors = CardDefaults.cardColors(containerColor = bookPaperColor)
     ) {
         Row(
             modifier = Modifier

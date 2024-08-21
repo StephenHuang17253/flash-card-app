@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
@@ -52,11 +53,11 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
     val context = LocalContext.current
 
     val isSummaryVisible = flashCards.isNotEmpty() && answersHistory.size == flashCards.size
-
     val scrollState = rememberScrollState()
+    val bookPaperColor = Color(0xFFFFF8E1)
 
     ElevatedCard(
-//        colors = CardColors(Color.Cyan, Color.Black, Color.Black, Color.Black),
+//        colors = CardDefaults.cardColors(containerColor = greyPaperColor),
         modifier = Modifier
             .padding(16.dp)
     ) {
@@ -201,7 +202,8 @@ fun PlayFlashCards(flashCardViewModel: FlashCardViewModel) {
                                 val question = flashCards.getOrNull(index)?.question ?: "Unknown Question"
                                 ElevatedCard(
                                     modifier = Modifier
-                                        .padding(16.dp)
+                                        .padding(16.dp),
+                                    colors = CardDefaults.cardColors(containerColor = bookPaperColor),
                                 ) {
                                     Row(
                                         verticalAlignment = Alignment.CenterVertically

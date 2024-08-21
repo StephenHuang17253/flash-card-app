@@ -8,6 +8,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -114,9 +115,8 @@ fun EditFlashCardScreen(navController: NavController,
                         editFlashCardViewModel.removeAnswer(answer.id)
                     }) {
                         Icon(
-                            imageVector = Icons.Filled.Close, // Use the Close icon
+                            imageVector = Icons.Filled.Delete, // Use the Close icon
                             contentDescription = "Remove Answer",
-                            tint = MaterialTheme.colorScheme.error
                         )
                     }
 

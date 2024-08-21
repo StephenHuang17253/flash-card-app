@@ -12,7 +12,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
@@ -29,6 +31,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -45,9 +48,12 @@ fun CreateFlashCard(navController: NavController,
                ) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
+    val bookPaperColor = Color(0xFFFFF8E1) // Light beige color
 
     ElevatedCard(
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier.padding(16.dp),
+//        colors = CardDefaults.cardColors(containerColor = bookPaperColor)
+
     ) {
         Column(
             modifier = Modifier
@@ -108,16 +114,15 @@ fun CreateFlashCard(navController: NavController,
                             if (isChecked) createFlashCardViewModel.updateCorrectAnswer(answer.id)
                         }
                     )
-                    Text(text = "Correct")
+//                    Text(text = "Correct")
 
                     // X Button for removing an answer
                     IconButton(onClick = {
                         createFlashCardViewModel.removeAnswer(answer.id)
                     }) {
                         Icon(
-                            imageVector = Icons.Filled.Close, // Use the Close icon
+                            imageVector = Icons.Filled.Delete, // Use the Close icon
                             contentDescription = "Remove Answer",
-                            tint = MaterialTheme.colorScheme.error
                         )
                     }
                 }

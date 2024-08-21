@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
@@ -13,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import nz.ac.canterbury.seng303.flashcardapp.models.FlashCard
@@ -24,10 +26,13 @@ fun FlashCard(cardId: String, flashCardViewModel: FlashCardViewModel) {
     flashCardViewModel.getCardById(cardId = cardId.toIntOrNull())
     val selectedCardState by flashCardViewModel.selectedFlashCard.collectAsState(null)
     val flashCard: FlashCard? = selectedCardState
+    val bookPaperColor = Color(0xFFFFF8E1) // Light beige color
 
     ElevatedCard(
         modifier = Modifier
-            .padding(16.dp)
+            .padding(16.dp),
+        colors = CardDefaults.cardColors(containerColor = bookPaperColor)
+
     ) {
         Column(
             modifier = Modifier
