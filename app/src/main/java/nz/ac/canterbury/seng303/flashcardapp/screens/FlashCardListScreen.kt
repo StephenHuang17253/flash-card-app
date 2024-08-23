@@ -94,7 +94,7 @@ fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashCardV
     ElevatedCard(
         modifier = Modifier.
         padding(16.dp),
-        colors = CardDefaults.cardColors(containerColor = bookPaperColor)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
     ) {
         Row(
             modifier = Modifier
@@ -130,7 +130,7 @@ fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashCardV
                 ) {
                     Button(onClick = {
                         val builder = AlertDialog.Builder(context)
-                        builder.setMessage("Google this question?\n\n \"${flashCard.question}\"?")
+                        builder.setMessage("Google this question?\n\n \"${flashCard.question}\"")
                             .setCancelable(false)
                             .setPositiveButton("Yes") { dialog, id ->
                                 val encodedQuestion = Uri.encode(flashCard.question)

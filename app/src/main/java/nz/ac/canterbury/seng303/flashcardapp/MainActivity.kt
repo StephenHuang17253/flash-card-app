@@ -62,7 +62,15 @@ class MainActivity : ComponentActivity() {
                                 val currentBackStackEntry by navController.currentBackStackEntryAsState()
                                 val currentRoute = currentBackStackEntry?.destination?.route
                                 if (currentRoute != "Home") {
-                                    IconButton(onClick = { navController.popBackStack() }) {
+                                    IconButton(onClick = {
+
+                                        if (currentRoute == "FlashCardList") {
+                                            navController.navigate("Home")
+                                        } else {
+                                            navController.popBackStack()
+                                        }
+
+                                    }) {
                                         Icon(
                                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                             contentDescription = "Back"

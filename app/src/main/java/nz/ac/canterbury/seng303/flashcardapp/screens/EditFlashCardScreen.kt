@@ -186,20 +186,21 @@ fun EditFlashCardScreen(navController: NavController,
 
                     Toast.makeText(context, "Flash card edited.", Toast.LENGTH_SHORT).show()
 
-                    val builder = AlertDialog.Builder(context)
-                    builder.setMessage("Where do you want to go")
-                        .setCancelable(false)
-                        .setPositiveButton("Home") { dialog, id ->
-                            navController.navigate("Home")
-                            dialog.dismiss()
-                        }
-                        .setNegativeButton("View Flash Cards") { dialog, id ->
-                            navController.navigate("FlashCardList")
-                            dialog.dismiss()
-                        }
-                    val alert = builder.create()
-                    alert.show()
+//                    val builder = AlertDialog.Builder(context)
+//                    builder.setMessage("Where do you want to go")
+//                        .setCancelable(false)
+//                        .setPositiveButton("Home") { dialog, id ->
+//                            navController.navigate("Home")
+//                            dialog.dismiss()
+//                        }
+//                        .setNegativeButton("View Flash Cards") { dialog, id ->
+//                            navController.navigate("FlashCardList")
+//                            dialog.dismiss()
+//                        }
+//                    val alert = builder.create()
+//                    alert.show()
 
+                    navController.navigate("FlashCardList")
                 },
                 modifier = Modifier
                     .fillMaxWidth()
