@@ -67,19 +67,24 @@ fun FlashCardList(navController: NavController, flashCardViewModel: FlashCardVie
 
 
     Column {
-        Row(
-            modifier = Modifier
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.Center
-        )
-        {
-            Text(
-                text = "Your Flash Cards",
-                style = MaterialTheme.typography.headlineLarge
-            )
-        }
+
 //        HorizontalDivider()
         LazyColumn {
+
+            item {
+                Row(
+                    modifier = Modifier
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.Center
+                )
+                {
+                    Text(
+                        text = "Your Flash Cards",
+                        style = MaterialTheme.typography.headlineLarge
+                    )
+                }
+            }
+
             items(flashCards) { flashCard ->
                 FlashCardItem(navController = navController, flashCard = flashCard, flashCardViewModel)
 //                HorizontalDivider() // Add a divider between items
