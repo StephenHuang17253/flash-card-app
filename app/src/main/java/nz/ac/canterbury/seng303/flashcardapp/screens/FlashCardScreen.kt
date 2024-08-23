@@ -26,12 +26,11 @@ fun FlashCard(cardId: String, flashCardViewModel: FlashCardViewModel) {
     flashCardViewModel.getCardById(cardId = cardId.toIntOrNull())
     val selectedCardState by flashCardViewModel.selectedFlashCard.collectAsState(null)
     val flashCard: FlashCard? = selectedCardState
-    val bookPaperColor = Color(0xFFFFF8E1) // Light beige color
 
     ElevatedCard(
         modifier = Modifier
             .padding(16.dp),
-        colors = CardDefaults.cardColors(containerColor = bookPaperColor)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)
 
     ) {
         Column(

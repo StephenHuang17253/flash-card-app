@@ -175,7 +175,7 @@ fun PlayFlashCards(
                                 val question = shuffledFlashCards.getOrNull(index)?.question ?: "Unknown Question"
                                 ElevatedCard(
                                     modifier = Modifier.padding(16.dp),
-                                    colors = CardDefaults.cardColors(containerColor = bookPaperColor),
+                                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
                                 ) {
                                     Row(
                                         verticalAlignment = Alignment.CenterVertically

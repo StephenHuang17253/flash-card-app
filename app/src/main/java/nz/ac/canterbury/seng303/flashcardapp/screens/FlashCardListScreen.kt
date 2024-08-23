@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
@@ -28,6 +29,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -90,11 +92,10 @@ fun FlashCardList(navController: NavController, flashCardViewModel: FlashCardVie
 @Composable
 fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashCardViewModel: FlashCardViewModel) {
     val context = LocalContext.current
-    val bookPaperColor = Color(0xFFFFF8E1)
     ElevatedCard(
         modifier = Modifier.
         padding(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)
     ) {
         Row(
             modifier = Modifier
@@ -128,7 +129,8 @@ fun FlashCardItem(navController: NavController, flashCard: FlashCard, flashCardV
 
 
                 ) {
-                    Button(onClick = {
+                    Button(
+                        onClick = {
                         val builder = AlertDialog.Builder(context)
                         builder.setMessage("Google this question?\n\n \"${flashCard.question}\"")
                             .setCancelable(false)

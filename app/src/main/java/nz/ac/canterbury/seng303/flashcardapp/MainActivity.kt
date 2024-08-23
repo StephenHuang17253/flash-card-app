@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -37,7 +38,7 @@ import nz.ac.canterbury.seng303.flashcardapp.screens.EditFlashCardScreen
 import nz.ac.canterbury.seng303.flashcardapp.screens.FlashCard
 import nz.ac.canterbury.seng303.flashcardapp.screens.FlashCardList
 import nz.ac.canterbury.seng303.flashcardapp.screens.PlayFlashCards
-import nz.ac.canterbury.seng303.flashcardapp.ui.theme.Lab2Theme
+import nz.ac.canterbury.seng303.flashcardapp.ui.theme.AppTheme
 import nz.ac.canterbury.seng303.flashcardapp.viewmodels.CreateFlashCardViewModel
 import nz.ac.canterbury.seng303.flashcardapp.viewmodels.FlashCardViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel as koinViewModel
@@ -50,13 +51,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         flashCardViewModel.loadDefaultCardsIfNoneExist()
         setContent {
-            Lab2Theme {
+            AppTheme {
                 val navController = rememberNavController()
                 Scaffold(
                     topBar = {
                         // Add your AppBar content here
                         TopAppBar(
-                            title = { Text("SENG303 Assignment 1") },
+                            title = { Text("QuizCards") },
                             navigationIcon = {
                                 // Check if the current destination is not "Home"
                                 val currentBackStackEntry by navController.currentBackStackEntryAsState()
@@ -143,19 +144,27 @@ fun Home(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "My Flash Card App",
+                text = "QuizCards",
                 style = MaterialTheme.typography.headlineLarge,
                 modifier = Modifier
                     .padding(16.dp)
             )
-            Button(onClick = { navController.navigate("FlashCardList") }) {
+
+
+            Button(
+                modifier = Modifier.padding(3.dp),
+                onClick = { navController.navigate("FlashCardList") }) {
                 Text(
                     text = "View Flash Cards")
             }
-            Button(onClick = { navController.navigate("CreateFlashCard") }) {
+            Button(
+                modifier = Modifier.padding(3.dp),
+                onClick = { navController.navigate("CreateFlashCard") }) {
                 Text("Create Flash Card")
             }
-            Button(onClick = { navController.navigate("PlayFlashCard") }) {
+            Button(
+                modifier = Modifier.padding(3.dp),
+                onClick = { navController.navigate("PlayFlashCard") }) {
                 Text("Play Flash Cards")
             }
         }

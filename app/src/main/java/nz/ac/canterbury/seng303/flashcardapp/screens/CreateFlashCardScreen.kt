@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng303.flashcardapp.screens
 
 import android.app.AlertDialog
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -48,7 +49,6 @@ fun CreateFlashCard(navController: NavController,
                ) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
-    val bookPaperColor = Color(0xFFFFF8E1) // Light beige color
 
     ElevatedCard(
         modifier = Modifier.padding(16.dp),
@@ -130,15 +130,21 @@ fun CreateFlashCard(navController: NavController,
 
             }
 
+
             // Button to add more answer fields
             Button(
                 onClick = {
                     if (createFlashCardViewModel.answers.size < 5) {
                         createFlashCardViewModel.addAnswer()
                     }
+
+                    if (createFlashCardViewModel.answers.size == 5) {
+                        Toast.makeText(context, "Maximum of 5 answers", Toast.LENGTH_SHORT).show()
+                    }
                 },
                 modifier = Modifier
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = 8.dp),
+                enabled = createFlashCardViewModel.answers.size < 5
             ) {
                 Text(text = "+")
             }
