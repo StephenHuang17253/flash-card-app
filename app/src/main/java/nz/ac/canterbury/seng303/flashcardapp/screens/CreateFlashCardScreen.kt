@@ -197,11 +197,12 @@ fun CreateFlashCard(navController: NavController,
                     val builder = AlertDialog.Builder(context)
                     builder.setMessage("Created flash card!")
                         .setCancelable(false)
-                        .setPositiveButton("Ok") { dialog, id -> /* Run some code on click */
+                        .setPositiveButton("View Flash Cards") { dialog, id -> /* Run some code on click */
                             navController.navigate("FlashCardList")
                         }
-                        .setNegativeButton("Cancel") { dialog, id ->
+                        .setNegativeButton("Return Home") { dialog, id ->
                             // Dismiss the dialog
+                            navController.navigate("Home")
                             dialog.dismiss()
                         }
                     val alert = builder.create()

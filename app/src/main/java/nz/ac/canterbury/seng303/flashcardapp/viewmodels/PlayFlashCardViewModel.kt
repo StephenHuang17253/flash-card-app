@@ -56,7 +56,7 @@ class PlayFlashCardViewModel : ViewModel() {
             val message = if (isCorrect) {
                 "Correct answer!"
             } else {
-                "Wrong answer.\nCorrect answer was: $correctAnswerText"
+                "Incorrect answer."
             }
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 

@@ -190,7 +190,7 @@ fun PlayFlashCards(
                                         Icon(
                                             imageVector = if (isCorrect) Icons.Filled.Check else Icons.Filled.Close,
                                             contentDescription = if (isCorrect) "Correct" else "Incorrect",
-                                            tint = if (isCorrect) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
+                                            tint = if (isCorrect) Color.Blue else MaterialTheme.colorScheme.error,
                                             modifier = Modifier.size(24.dp)
                                         )
                                     }
