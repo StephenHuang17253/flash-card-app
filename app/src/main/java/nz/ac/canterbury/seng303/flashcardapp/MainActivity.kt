@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        flashCardViewModel.loadDefaultCardsIfNoneExist()
+//        flashCardViewModel.loadDefaultCardsIfNoneExist()
         setContent {
             AppTheme {
                 val navController = rememberNavController()
